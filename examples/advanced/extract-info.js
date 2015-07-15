@@ -1,3 +1,9 @@
+// TODO: make this an executable example (i.e. add requisite boilerplate)
+
+
+// this is the function used by tesseract.js in order
+// to capture all the information from the C++ api 
+
 function DumpLiterallyEverything(){
     var ri = base.GetIterator();
     var blocks = [];
@@ -97,8 +103,8 @@ function DumpLiterallyEverything(){
         var image = null;
         // var pix = ri.GetBinaryImage(Module.RIL_SYMBOL)
         // var image = pix2array(pix);
-        // // for some reason it seems that things stop working if you destroy pics
-        // Module._pixDestroy(Module.getPointer(pix));
+        // not sure if this stuff gets properly garbage collected
+        // but calling pixDestroy here ends up breaking things
 
         symbol = {
             choices: [],
@@ -196,4 +202,30 @@ function circularize(page){
         })
     })
     return page
+}
+
+// this is a helper for a part which is commented out
+function pix2array(pix){
+    var depth = pix.get_d(),
+        wpl = pix.get_wpl(),
+        width = pix.get_w(),
+        height = pix.get_h(),
+        data = pix.get_data();
+    var array = new Uint8Array(width * height);
+    for(var y = 0; y < height; y++){
+        for(var j = 0; j < wpl; j++){
+            var bs = Module.getValue(data + wpl * 4 * y + j * 4, 'i32');
+            for(var k = 0; k < 8 * 4; k++){
+                var val = (bs >> k) & 1;
+                var x = j * 8 * 4 - k;
+                if(x >= width) continue;
+                array[x + width * y] = val;
+            }
+        }
+    }
+    return {
+        width: width,
+        height: height,
+        data: array
+    }
 }
