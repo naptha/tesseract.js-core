@@ -15,21 +15,7 @@ load_tessdata('eng', function(data){
 })
 
 function run_ocr(){
-    var pbm = fs.readFileSync('test.pbm'); // this is a simple image format
-    for(var start = 0; pbm[start] != 0; start++); // find the first non-ascii char
-    var lines = pbm.toString('ascii', 0, start).split(/\s+/)
-    if(lines[0] != 'P4') throw new Error('Image must be a Binary-encoded 1-bit PBM (magic number P4 not found)');
-    
-    var width = parseInt(lines[1]),
-        height = parseInt(lines[2]);
-    var pic = new Uint8Array(width * height)
-    console.log('image size', width, 'x', height, lines);
-    var bytes_per_line = Math.ceil(width / 8);
-    for(var i = 0; i < height; i++){
-        for(var j = 0; j < width; j++){
-            pic[i * width + j] = ((pbm[start + i * bytes_per_line + Math.floor(j / 8)] >> (7 - (j % 8))) & 1) * 255
-        }
-    }
+    var pic = read_pbm('test.pbm')
     var picptr = Module.allocate(pic, 'i8', Module.ALLOC_NORMAL);
 
     // initialize C++ API
@@ -51,6 +37,25 @@ function run_ocr(){
 }
 
 
+
+function read_pbm(fileName){
+    var pbm = fs.readFileSync(fileName); // this is a simple image format
+    for(var start = 0; pbm[start] != 0; start++); // find the first non-ascii char
+    var lines = pbm.toString('ascii', 0, start).split(/\s+/)
+    if(lines[0] != 'P4') throw new Error('Image must be a Binary-encoded 1-bit PBM (magic number P4 not found)');
+    
+    var width = parseInt(lines[1]),
+        height = parseInt(lines[2]);
+    var pic = new Uint8Array(width * height)
+    console.log('image size', width, 'x', height, lines);
+    var bytes_per_line = Math.ceil(width / 8);
+    for(var i = 0; i < height; i++){
+        for(var j = 0; j < width; j++){
+            pic[i * width + j] = ((pbm[start + i * bytes_per_line + Math.floor(j / 8)] >> (7 - (j % 8))) & 1) * 255
+        }
+    }
+    return pic;
+}
 
 function load_tessdata(lang, cb){
     fs.readFile(lang + '.traineddata', function (err, data) {
