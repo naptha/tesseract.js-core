@@ -8,5 +8,6 @@ The API essentially mirrors the Tesseract C++ API specified in [baseapi.h](https
 
 The contents of this repository is [automatically generated](https://github.com/naptha/tesseract-emscripten/tree/master/javascript), so any issues or pull requests should probably be in that repository. 
 
+This repository only has one file, the 2.7MB "index.js" formatted with UMD and hosted graciously by rawgit.
 
-
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js"></script>
