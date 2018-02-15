@@ -1,3 +1,6 @@
 [submodule "tesseract"]
 	path = tesseract
 	url = git@github.com:tesseract-ocr/tesseract.git
+[submodule "leptonica"]
+	path = leptonica
+	url = git@github.com:DanBloomberg/leptonica.git
