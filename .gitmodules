@@ -1,0 +1,3 @@
+[submodule "tesseract"]
+	path = tesseract
+	url = git@github.com:tesseract-ocr/tesseract.git
