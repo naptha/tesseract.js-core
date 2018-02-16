@@ -15,4 +15,4 @@ Everything inside this repository will be mounted to `/src`, next you can start 
 $ sh scripts/compile.sh
 ```
 
-If nothing goes run, you can get tesseract-core.js at **./tesseract/tesseract-core.js**
+If nothing goes wrong, you can get tesseract-core.js at **./tesseract/tesseract-core.js**
