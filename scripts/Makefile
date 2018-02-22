@@ -34,13 +34,15 @@ EM_FLAGS := -Oz --closure 1 \
 						-s TOTAL_MEMORY=268435456 \
 						-s EXPORT_NAME='"TesseractCore"' \
 						-s MODULARIZE=1 \
-  					-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy"]' \
-						-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS"]' \
+  					-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy", "_pixaCreate"]' \
+						-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "ccall", "cwrap", "setValue", "getValue", "ALLOC_NORMAL"]' \
   					--js-transform "python strip_node.py" \
   					--llvm-lto 1 \
 						-s INVOKE_RUN=0 \
 						-s NO_EXIT_RUNTIME=1 \
 						-s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
+						-s ASSERTIONS=1 \
+						-s DEMANGLE_SUPPORT=1 \
 						--post-js glue.js \
 						--post-js anterior.js \
 						$(FLAGS)
@@ -55,13 +57,15 @@ TES_SRC := ./api/*.cpp \
 					 ./cutil/*.cpp \
 					 ./classify/*.cpp
 
-all: tesseract
+all: patch-tes prepare patch-lep leptonica tess-deps tesseract
 
 patch-lep:
 	patch -Nbs $(LEPTONICA_PATH)/src/environ.h $(PATCH_PATH)/leptonica/src/environ.h; exit 0
+	patch -Nbs $(LEPTONICA_PATH)/src/makefile.static $(PATCH_PATH)/leptonica/src/makefile.static; exit 0
 
 leptonica: patch-lep
 	$(EMMAKE) make -C $(LEPTONICA_PATH)/src -f makefile.static
+	cp ${LEPTONICA_PATH}/obj/nodebug/*.o ${TESSERACT_PATH}/
 
 patch-tes:
 	patch -Nbs $(TESSERACT_PATH)/ccmain/ltrresultiterator.cpp $(PATCH_PATH)/tesseract/ccmain/ltrresultiterator.cpp; exit 0
@@ -74,11 +78,11 @@ prepare:
 		python $(WEBIDL_BINDER_PY) ../src/tesseract.idl glue && \
 		cp ../src/* .
 
-deps:
+tess-deps:
 	cd $(TESSERACT_PATH) && \
 		$(EM) $(FLAGS) $(DEFS) $(LIBS) -c $(TES_SRC)
 
-tesseract: patch-tes prepare deps
+tesseract: patch-tes prepare leptonica tess-deps
 	cd $(TESSERACT_PATH) && \
 		$(EM) $(EM_FLAGS) $(EM_DEFS) $(LIBS) ./wrapper.cpp *.o -o tesseract-core.js
 

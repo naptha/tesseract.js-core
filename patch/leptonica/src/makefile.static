@@ -1,0 +1,17 @@
+--- makefile.static	2018-02-22 21:13:12.776317332 +0800
++++ makefile.new.static	2018-02-22 21:12:44.838407333 +0800
+@@ -106,12 +106,13 @@
+ #        ERROR_* logging, and to remove all DEBUG information dependent
+ #        on whether or not NO_CONSOLE_IO has been defined.
+ #     - remove -fPIC for Cygwin
+-CC =		gcc -std=c99 -U__STRICT_ANSI__ -D__USE_MINGW_ANSI_STDIO
++#CC =		gcc -std=c99 -U__STRICT_ANSI__ -D__USE_MINGW_ANSI_STDIO
+ #CC =		gcc -std=c89 -U__STRICT_ANSI__ -D__USE_MINGW_ANSI_STDIO
+ #CC =		gcc -std=c99 -D_POSIX_C_SOURCE=200809L -D__USE_MINGW_ANSI_STDIO -D_BSD_SOURCE -DANSI -fPIC
+ #CC =		gcc -std=gnu89 -D__USE_MINGW_ANSI_STDIO
+ #CC =		gcc -std=gnu89 -D_BSD_SOURCE -DANSI -Werror -fPIC
+ #CC =		gcc -std=c99 -U__STRICT_ANSI__ -D__USE_MINGW_ANSI_STDIO -DNO_CONSOLE_IO
++CC =		em++ -Wno-deprecated -D_BSD_SOURCE -fPIC
+ #CC =		g++ -D_BSD_SOURCE -fPIC
+ #CC =		g++ -Werror -D_BSD_SOURCE -fPIC
+ #CC =		g++ -Wunused -D_BSD_SOURCE -fPIC
