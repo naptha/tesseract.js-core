@@ -1,9 +1,9 @@
 --- control.cpp	2018-02-15 21:15:35.933256333 +0800
 +++ control.cpp.new	2018-02-16 15:48:35.234230333 +0800
 @@ -47,6 +47,7 @@
+ #include "globals.h"
+ #include "sorthelper.h"
  #include "tesseractclass.h"
- #include "tessvars.h"
- #include "werdit.h"
 +#include <emscripten.h>
  
  #define MIN_FONT_ROW_COUNT  8

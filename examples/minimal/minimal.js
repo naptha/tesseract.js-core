@@ -1,7 +1,7 @@
 const lang = 'eng';
 
 const fs = require('fs');
-const TesseractCore = require('../../tesseract/tesseract-core');
+const TesseractCore = require('../../');
 const { width, height, data } = require('./test-image');
 
 const Module = TesseractCore();
@@ -12,14 +12,16 @@ const buf = fs.readFileSync(`../traineddata/${lang}.traineddata`);
 Module.FS.mkdir('/tessdata');
 Module.FS.writeFile(`/tessdata/${lang}.traineddata`, buf);
 
-const picptr = Module.allocate(data, 'i8', Module.ALLOC_NORMAL);
+const ptr = Module._malloc(data.length * Uint8Array.BYTES_PER_ELEMENT);
+
+Module.HEAPU8.set(data, ptr);
 
 tessAPI.Init(null, lang);
-tessAPI.SetImage(Module.wrapPointer(picptr), width, height, 1, width);
+tessAPI.SetImage(ptr, width, height, Uint8Array.BYTES_PER_ELEMENT, width);
 tessAPI.SetRectangle(0, 0, width, height);
 
-const text = tessAPI.GetUTF8Text();
-console.log(text);
+console.log(tessAPI.GetUTF8Text());
 
 tessAPI.End();
 Module.destroy(tessAPI);
+Module._free(ptr);

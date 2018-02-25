@@ -1,10 +1,5 @@
 #!/bin/bash
-
-TARGET=$1
-DIR=$(cd `dirname $0`; pwd)
-
-main() {
-  make -C ${DIR}/.. -f ${DIR}/Makefile ${TARGET}
-}
-
-main "$@"
+docker run -it \
+  --mount type=bind,source=$(pwd),target=/src \
+  trzeci/emscripten:sdk-tag-1.37.33-64bit \
+  /bin/bash /src/scripts/make.sh

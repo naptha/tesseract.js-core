@@ -7,10 +7,11 @@ WEBIDL_BINDER_PY := /emsdk_portable/sdk/tools/webidl_binder.py
 EMMAKE := emmake
 EM := em++
 DEFS := -DUSE_STD_NAMESPACE
-FLAGS := --std=c++11 -Wno-inconsistent-missing-override
+FLAGS := --std=c++11 -Wno-inconsistent-missing-override -Wno-delete-incomplete
 LIBS := -I../$(LEPTONICA_PATH)/src \
 				-I./api \
-				-I./lstm \
+				-I./neural_networks/runtime \
+				-I./cube \
 				-I./opencl \
 				-I./ccutil \
 				-I./textord \
@@ -20,7 +21,6 @@ LIBS := -I../$(LEPTONICA_PATH)/src \
 				-I./cutil \
 				-I./wordrec \
 				-I./ccstruct \
-				-I./arch \
 				-I./viewer
 
 EM_DEFS := -DANDROID_BUILD \
@@ -34,9 +34,8 @@ EM_FLAGS := -Oz --closure 1 \
 						-s TOTAL_MEMORY=268435456 \
 						-s EXPORT_NAME='"TesseractCore"' \
 						-s MODULARIZE=1 \
-  					-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy", "_pixReadMemTiff"]' \
-						-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "ccall", "cwrap", "setValue", "getValue", "ALLOC_NORMAL", "allocate"]' \
-  					--js-transform "python strip_node.py" \
+  					-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy"]' \
+						-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "setValue", "getValue"]' \
   					--llvm-lto 1 \
 						-s INVOKE_RUN=0 \
 						-s NO_EXIT_RUNTIME=1 \
@@ -47,8 +46,9 @@ EM_FLAGS := -Oz --closure 1 \
 						--post-js anterior.js \
 						$(FLAGS)
 TES_SRC := ./api/*.cpp \
-					 ./lstm/*.cpp \
 					 ./ccmain/*.cpp \
+					 ./neural_networks/runtime/*.cpp \
+					 ./cube/*.cpp \
 					 ./ccutil/*.cpp \
 					 ./wordrec/*.cpp \
 					 ./textord/*.cpp \
@@ -56,14 +56,15 @@ TES_SRC := ./api/*.cpp \
 					 ./dict/*.cpp \
 					 ./cutil/*.cpp \
 					 ./classify/*.cpp \
-					 ./arch/*.cpp \
-					 ./viewer/svutil.cpp
+					 ./viewer/svutil.cpp \
+					 ./viewer/svmnode.cpp \
+					 ./viewer/scrollview.cpp
 
 all: patch-lep leptonica patch-tes tess-deps tesseract
 
 patch-lep:
 	patch -Nbs $(LEPTONICA_PATH)/src/makefile.static $(PATCH_PATH)/leptonica/src/makefile.static; exit 0
-#	patch -Nbs $(LEPTONICA_PATH)/src/environ.h $(PATCH_PATH)/leptonica/src/environ.h; exit 0
+	patch -Nbs $(LEPTONICA_PATH)/src/environ.h $(PATCH_PATH)/leptonica/src/environ.h; exit 0
 
 leptonica: patch-lep
 	$(EMMAKE) make -C $(LEPTONICA_PATH)/src -f makefile.static
@@ -86,5 +87,4 @@ tess-deps:
 
 tesseract: prepare
 	cd $(TESSERACT_PATH) && \
-		$(EM) $(EM_FLAGS) $(EM_DEFS) $(LIBS) ./wrapper.cpp *.o -o tesseract-core.js
-
+		$(EM) $(EM_FLAGS) $(EM_DEFS) $(LIBS) ./wrapper.cpp *.o -o ../index.js
