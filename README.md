@@ -3,7 +3,7 @@ tesseract.js-core
 
 ![](https://raw.githubusercontent.com/jeromewu/tesseract.js-core/master/assets/images/tesseract.js-core.png)
 
-Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compiles original tesseract from C to JavaScript (in Web Assembly).
+Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compiles original tesseract from C to JavaScript WebAssembly.
 
 ## Environment
 
@@ -12,10 +12,12 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
 - Tesseract: 3.05.01
 - Node: 8.9.4
 
-## Development
+## Contribution
 
-To compile the new index.js
+To contribute, feel free to modify anything inside src/ folder and when everything is done, simply execute:
 
 ```bash
 $ sh scripts/compile.sh
 ```
+
+And you will have the new index.js to go.
