@@ -1,4 +1,0 @@
-[submodule "tesseract"]
-	path = tesseract
-	url = git@github.com:jeromewu/tesseract.git
-  branch = 4.0.0-tesseract.js
