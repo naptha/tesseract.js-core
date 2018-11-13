@@ -1,3 +1,6 @@
 {
-  "LANG_URI": "https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0"
+  "LANG_URI": "https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0",
+  "ONE_LANG": "slk_frak",
+  "TWO_LANGS": "slk_frak+fas",
+  "THREE_LANGS": "slk_frak+fas+mri"
 }
