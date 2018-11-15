@@ -2,8 +2,9 @@
   "name": "tesseract.js-core",
   "version": "1.0.2",
   "description": "Tesseract C++ API in Pure Javascript",
-  "main": "index.js",
+  "main": "tesseract-core.js",
   "scripts": {
+    "test": "jest",
     "lint": "eslint examples"
   },
   "repository": {
@@ -28,6 +29,9 @@
     "english"
   ],
   "author": "antimatter15",
+  "contributors": [
+    "jeromewu"
+  ],
   "license": "Apache License 2.0",
   "bugs": {
     "url": "https://github.com/naptha/tesseract.js-core/issues"
@@ -38,9 +42,11 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
+    "eslint-plugin-react": "^7.7.0",
+    "jest": "^23.6.0"
   },
   "dependencies": {
-    "canvas": "^1.6.9"
+    "canvas": "^1.6.9",
+    "node-fetch": "^2.3.0"
   }
 }
