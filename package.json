@@ -2,7 +2,7 @@
   "name": "tesseract.js-core",
   "version": "1.0.2",
   "description": "Tesseract C++ API in Pure Javascript",
-  "main": "tesseract-core.js",
+  "main": "src/tesseract-core.js",
   "scripts": {
     "test": "mocha ./tests/unit/*.test.js",
     "lint": "eslint examples"

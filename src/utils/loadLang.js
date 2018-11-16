@@ -13,6 +13,13 @@ const handleLang = ({
   lang,
 }) => (data) => {
   if (tessModule) {
+    if (dataPath) {
+      try {
+        tessModule.FS.mkdir(dataPath);
+      } catch (err) {
+        // Do nothing
+      }
+    }
     tessModule.FS.writeFile(`${dataPath || '.'}/${lang}.traineddata`, data);
   }
   if (cache) {
