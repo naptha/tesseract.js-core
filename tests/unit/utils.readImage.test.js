@@ -12,9 +12,9 @@ const loadImageCases = {};
 formats.forEach((format) => {
   loadImageCases[`read ${format} format`] = TesseractCore => (done) => {
     TesseractCore().then((TessModule) => {
-      const { height, width, data } = readImage(TessModule, `./tests/unit/assets/images/testocr.${format}`);
-      expect(width).to.be(testocr.width);
-      expect(height).to.be(testocr.height);
+      const { w, h, data } = readImage(TessModule, `./tests/unit/assets/images/testocr.${format}`);
+      expect(w).to.be(testocr.width);
+      expect(h).to.be(testocr.height);
       TessModule._free(data);
       done();
     });
