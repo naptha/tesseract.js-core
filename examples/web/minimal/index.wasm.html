@@ -1,15 +1,14 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <script src="../../../tesseract/build/bin/tesseract.js"></script>
+    <script src="../../../src/tesseract-core.js"></script>
     <script>
-      const TessModule = TesseractCore();
 
-      TessModule.onRuntimeInitialized = () => {
+      TesseractCore().then((TessModule) => {
         const api = new TessModule.TessBaseAPI();
         const lang = 'eng';
 
-        fetch(`../../traineddata/${lang}.traineddata`)
+        fetch(`../../../tests/traineddata/${lang}.traineddata`)
           .then(resp => resp.arrayBuffer())
           .then(buf => {
             TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
@@ -30,7 +29,7 @@
             TessModule.destroy(api);
             TessModule._free(ptr);
           });
-      }
+      });
     </script>
   </head>
   <body>

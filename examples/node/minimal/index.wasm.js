@@ -1,11 +1,11 @@
 const fs = require('fs');
-const TessModule = require('../../../tesseract/build/bin/tesseract')();
+const TesseractCore = require('../../../src/tesseract-core');
 const { width, height, data } = require('../../data/test-image.json');
 
-TessModule.onRuntimeInitialized = () => {
+TesseractCore().then((TessModule) => {
   const lang = 'eng';
   const api = new TessModule.TessBaseAPI();
-  const buf = fs.readFileSync(`../../traineddata/${lang}.traineddata`);
+  const buf = fs.readFileSync(`../../../tests/traineddata/${lang}.traineddata`);
   const ptr = TessModule._malloc(data.length * Uint8Array.BYTES_PER_ELEMENT);
 
   TessModule.FS.writeFile(`${lang}.traineddata`, buf);
@@ -20,4 +20,4 @@ TessModule.onRuntimeInitialized = () => {
   api.End();
   TessModule.destroy(api);
   TessModule._free(ptr);
-};
+});
