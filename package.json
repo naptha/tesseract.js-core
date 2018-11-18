@@ -51,7 +51,6 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "canvas": "^1.6.9",
     "node-fetch": "^2.3.0"
   }
 }
