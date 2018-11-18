@@ -1,0 +1,3 @@
+[submodule "tesseract"]
+	path = tesseract
+	url = https://github.com/jeromewu/tesseract

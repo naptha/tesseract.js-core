@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../../src/tesseract-core.js"></script>
+    <script>
+
+      TesseractCore().then((TessModule) => {
+        const api = new TessModule.TessBaseAPI();
+        const lang = 'eng';
+
+        fetch(`../../../tests/traineddata/${lang}.traineddata`)
+          .then(resp => resp.arrayBuffer())
+          .then(buf => {
+            TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
+            return fetch('../../data/test-image.json');
+          })
+          .then(resp => resp.json())
+          .then(json => {
+            const { width, height, data } = json;
+            const messageDiv = document.getElementById('message');
+            const ptr = TessModule._malloc(data.length * Uint8Array.BYTES_PER_ELEMENT);
+            TessModule.HEAPU8.set(data, ptr);
+
+            api.Init(null, lang);
+            api.SetImage(ptr, width, height, Uint8Array.BYTES_PER_ELEMENT, width);
+            api.SetRectangle(0, 0, width, height);
+            messageDiv.innerHTML = api.GetUTF8Text();
+            api.End();
+            TessModule.destroy(api);
+            TessModule._free(ptr);
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <textarea id="message">Working...</textarea>
+  </body>
+</html>
