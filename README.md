@@ -7,17 +7,26 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
 
 ## Environment
 
-- Emscripten: 1.37.33 (trzeci/emscripten:sdk-tag-1.37.33-64bit)
-- Leptonica: 1.75.2
-- Tesseract: 3.05.01
-- Node: 8.9.4
+- Emscripten: 1.38.16 (trzeci/emscripten:sdk-tag-1.38.16-64bit)
+- Leptonica: 1.74.2
+  - zlib: 1.2.5
+  - libtiff: 3.9.4
+  - libjpeg: 8.4.0
+  - libpng: 1.4.22
+- Tesseract: 4.0.0
 
 ## Contribution
 
-To contribute, feel free to modify anything inside src/ folder and when everything is done, simply execute:
+As we leverage git-submodule to manage dependencies, remember to add recursive when cloning the repository:
 
-```bash
-$ sh scripts/compile.sh
+```
+$ git clone --recursive https://github.com/naptha/tesseract.js-core
 ```
 
-And you will have the new index.js to go.
+To build tesseract-core.js by yourself, please install [docker](https://www.docker.com/) and run:
+
+```
+$ sh build.sh
+```
+
+The genreated files will be stored in src/tesseract-core.\*
