@@ -1,7 +1,4 @@
-const fs = require('fs');
-
-module.exports = (TessModule, path) => {
-  const buf = fs.readFileSync(path);
+module.exports = (TessModule, buf) => {
   const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
   TessModule.HEAPU8.set(buf, ptr);
   const pix = TessModule._pixReadMem(ptr, buf.length);

@@ -1,4 +1,5 @@
 const expect = require('expect.js');
+const fs = require('fs');
 const duplicateIt = require('./utils/duplicateIt');
 const loadLang = require('../../src/utils/loadLang');
 const readImage = require('../../src/utils/readImage');
@@ -17,7 +18,8 @@ const genGetTextCase = (path, expects) => TesseractCore => (done) => {
       cachePath: './tests/traineddata',
     })
       .then((dataList) => {
-        const { data } = readImage(TessModule, path);
+        const buf = fs.readFileSync(path);
+        const { data } = readImage(TessModule, buf);
         api.Init(null, langs);
         api.SetImage(data);
         expect(dataList.length).to.be(1);
