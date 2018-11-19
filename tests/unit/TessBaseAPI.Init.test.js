@@ -1,6 +1,6 @@
 const expect = require('expect.js');
+const { loadLang } = require('tesseract.js-utils');
 const duplicateIt = require('./utils/duplicateIt');
-const loadLang = require('../../src/utils/loadLang');
 const {
   LANG_URI,
 } = require('../config.json');

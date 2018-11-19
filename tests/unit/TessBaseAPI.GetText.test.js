@@ -1,8 +1,7 @@
 const expect = require('expect.js');
 const fs = require('fs');
+const { loadLang, readImage } = require('tesseract.js-utils');
 const duplicateIt = require('./utils/duplicateIt');
-const loadLang = require('../../src/utils/loadLang');
-const readImage = require('../../src/utils/readImage');
 const { LANG_URI } = require('../config.json');
 const testocr = require('./assets/data/testocr.json');
 const small = require('./assets/data/small.json');

@@ -2,13 +2,16 @@
   "name": "tesseract.js-core",
   "version": "2.0.0-beta.2",
   "description": "Tesseract C++ API in Pure Javascript",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha ./tests/unit/*.test.js",
     "example": "http-server -p 3000"
   },
   "files": [
-    "/src"
+    "index.js",
+    "tesseract-core.asm.js",
+    "tesseract-core.js",
+    "tesseract-core.wasm"
   ],
   "repository": {
     "type": "git",
@@ -49,8 +52,5 @@
     "expect.js": "^0.3.1",
     "http-server": "^0.11.1",
     "mocha": "^5.2.0"
-  },
-  "dependencies": {
-    "node-fetch": "^2.3.0"
   }
 }
