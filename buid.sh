@@ -5,7 +5,7 @@
 
 main() {
   cd tesseract
-  sh build-for-tesseract.js.sh
+  sh build-in-docker.sh
   cp ./build/bin/* ../
 }
 
