@@ -1,5 +1,5 @@
-const TesseractCoreASM = require('../../../src/tesseract-core.asm');
-const TesseractCoreWASM = require('../../../src/tesseract-core');
+const TesseractCoreASM = require('../../../tesseract-core.asm');
+const TesseractCoreWASM = require('../../../tesseract-core');
 
 module.exports = (desc, callback, { timeout }) => {
   it(`[ASM]: ${desc}`, callback(TesseractCoreASM)).timeout(timeout);

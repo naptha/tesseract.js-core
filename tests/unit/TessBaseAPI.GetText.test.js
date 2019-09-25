@@ -12,20 +12,20 @@ const genGetTextCase = (path, expects) => TesseractCore => (done) => {
     const langs = 'eng';
     loadLang({
       langs,
-      tessModule: TessModule,
-      langURI: LANG_URI,
+      TessModule,
+      langPath: LANG_URI,
       cachePath: './tests/traineddata',
     })
       .then((dataList) => {
         const buf = fs.readFileSync(path);
-        const { data } = readImage(TessModule, buf);
+        const { pix } = readImage(TessModule, buf);
         api.Init(null, langs);
-        api.SetImage(data);
+        api.SetImage(pix);
         expect(dataList.length).to.be(1);
         expects(api);
         api.End();
         TessModule.destroy(api);
-        TessModule._free(data);
+        TessModule._free(pix);
         done();
       });
   });

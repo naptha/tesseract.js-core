@@ -12,7 +12,7 @@ const {
 
 const getLangOptions = langs => options => ({
   langs,
-  langURI: LANG_URI,
+  langPath: LANG_URI,
   cachePath: './tests/traineddata',
   ...options,
 });
@@ -23,7 +23,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = ONE_LANG;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
       }))
         .then((dataList) => {
           api.Init(null, langs);
@@ -41,7 +41,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = ONE_LANG;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
         dataPath: 'traineddata',
       }))
         .then((dataList) => {
@@ -60,7 +60,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = TWO_LANGS;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
       }))
         .then((dataList) => {
           api.Init(null, langs);
@@ -79,7 +79,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = TWO_LANGS;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
         dataPath: 'traineddata',
       }))
         .then((dataList) => {
@@ -99,7 +99,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = THREE_LANGS;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
       }))
         .then((dataList) => {
           api.Init(null, langs);
@@ -119,7 +119,7 @@ const loadLangCases = {
       const api = new TessModule.TessBaseAPI();
       const langs = THREE_LANGS;
       loadLang(getLangOptions(langs)({
-        tessModule: TessModule,
+        TessModule,
         dataPath: 'traineddata',
       }))
         .then((dataList) => {
