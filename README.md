@@ -7,13 +7,13 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
 
 ## Environment
 
-- Emscripten: 1.38.16 (trzeci/emscripten:sdk-tag-1.38.16-64bit)
+- Emscripten: 1.38.45 (trzeci/emscripten:1.38.45)
 - Leptonica: 1.74.2
   - zlib: 1.2.5
   - libtiff: 3.9.4
   - libjpeg: 8.4.0
   - libpng: 1.4.22
-- Tesseract: 4.0.0
+- Tesseract: 4.1.0
 
 ## Contribution
 
