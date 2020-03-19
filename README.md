@@ -7,13 +7,13 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
 
 ## Environment
 
-- Emscripten: 1.38.45 (trzeci/emscripten:1.38.45)
+- Emscripten: 1.39.10 (trzeci/emscripten:1.39.10-upstream)
 - Leptonica: 1.74.2
   - zlib: 1.2.5
   - libtiff: 3.9.4
   - libjpeg: 8.4.0
   - libpng: 1.4.22
-- Tesseract: 4.1.0
+- Tesseract: 4.1.1
 
 ## Contribution
 
@@ -29,4 +29,4 @@ To build tesseract-core.js by yourself, please install [docker](https://www.dock
 $ sh build.sh
 ```
 
-The genreated files will be stored in src/tesseract-core.\*
+The genreated files will be stored in root path.
