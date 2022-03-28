@@ -1,0 +1,1503 @@
+interface TessBaseAPI {
+  void TessBaseAPI();
+
+  /**
+   * Returns the version identifier as a static string. Do not delete.
+   */
+  [Const] DOMString Version();
+
+
+  /**
+   * Writes the thresholded image to stderr as a PBM file on receipt of a
+   * SIGSEGV, SIGFPE, or SIGBUS signal. (Linux/Unix only).
+   */
+  void CatchSignals();
+
+  /**
+   * Set the name of the input file. Needed for training and
+   * reading a UNLV zone file, and for searchable PDF output.
+   */
+  void SetInputName([Const] DOMString name);
+  /**
+   * These functions are required for searchable PDF output.
+   * We need our hands on the input file so that we can include
+   * it in the PDF without transcoding. If that is not possible,
+   * we need the original image. Finally, resolution metadata
+   * is stored in the PDF so we need that as well.
+   */
+  [Const] DOMString GetInputName();
+  void SetInputImage(Pix pix);
+  Pix GetInputImage();
+  long GetSourceYResolution();
+  [Const] DOMString GetDatapath();
+
+  /** Set the name of the bonus output files. Needed only for debugging. */
+  void SetOutputName([Const] DOMString name);
+
+  /**
+   * Set the value of an internal "parameter."
+   * Supply the name of the parameter and the value as a string, just as
+   * you would in a config file.
+   * Returns false if the name lookup failed.
+   * Eg SetVariable("tessedit_char_blacklist", "xyz"); to ignore x, y and z.
+   * Or SetVariable("classify_bln_numeric_mode", "1"); to set numeric-only mode.
+   * SetVariable may be used before Init, but settings will revert to
+   * defaults on End().
+   *
+   * Note: Must be called after Init(). Only works for non-init variables
+   * (init variables should be passed to Init()).
+   */
+  boolean SetVariable([Const] DOMString name, [Const] DOMString value);
+  boolean SetDebugVariable([Const] DOMString name, [Const] DOMString value);
+
+  /**
+   * Returns true if the parameter was found among Tesseract parameters.
+   * Fills in value with the value of the parameter.
+   */
+  boolean GetIntVariable([Const] DOMString name, IntPtr value);
+  boolean GetBoolVariable([Const] DOMString name, BoolPtr value);
+  boolean GetDoubleVariable([Const] DOMString name, DoublePtr value);
+
+  /**
+   * Returns the pointer to the string that represents the value of the
+   * parameter if it was found among Tesseract parameters.
+   */
+  [Const] DOMString GetStringVariable([Const] DOMString name);
+
+  /**
+   * Print Tesseract parameters to the given file.
+   */
+  void PrintVariables();
+
+  /**
+   * Get value of named variable as a string, if it exists.
+   */
+  // boolean GetVariableAsString([Const] DOMString name, STRING val);
+
+  /**
+   * Instances are now mostly thread-safe and totally independent,
+   * but some global parameters remain. Basically it is safe to use multiple
+   * TessBaseAPIs in different threads in parallel, UNLESS:
+   * you use SetVariable on some of the Params in classify and textord.
+   * If you do, then the effect will be to change it for all your instances.
+   *
+   * Start tesseract. Returns zero on success and -1 on failure.
+   * NOTE that the only members that may be called before Init are those
+   * listed above here in the class definition.
+   *
+   * The datapath must be the name of the parent directory of tessdata and
+   * must end in / . Any name after the last / will be stripped.
+   * The language is (usually) an ISO 639-3 string or NULL will default to eng.
+   * It is entirely safe (and eventually will be efficient too) to call
+   * Init multiple times on the same instance to change language, or just
+   * to reset the classifier.
+   * The language may be a string of the form [~]<lang>[+[~]<lang>]* indicating
+   * that multiple languages are to be loaded. Eg hin+eng will load Hindi and
+   * English. Languages may specify internally that they want to be loaded
+   * with one or more other languages, so the ~ sign is available to override
+   * that. Eg if hin were set to load eng by default, then hin+~eng would force
+   * loading only hin. The number of loaded languages is limited only by
+   * memory, with the caveat that loading additional languages will impact
+   * both speed and accuracy, as there is more work to do to decide on the
+   * applicable language, and there is more chance of hallucinating incorrect
+   * words.
+   * WARNING: On changing languages, all Tesseract parameters are reset
+   * back to their default values. (Which may vary between languages.)
+   * If you have a rare need to set a Variable that controls
+   * initialization for a second call to Init you should explicitly
+   * call End() and then use SetVariable before Init. This is only a very
+   * rare use case, since there are very few uses that require any parameters
+   * to be set before Init.
+   *
+   * If set_only_non_debug_params is true, only params that do not contain
+   * "debug" in the name will be set.
+   */
+  // long Init([Const] DOMString datapath, [Const] DOMString language, OcrEngineMode mode,
+  //          char **configs, long configs_size,
+  //          const GenericVector<STRING> *vars_vec,
+  //          const GenericVector<STRING> *vars_values,
+  //          boolean set_only_non_debug_params);
+
+  long Init([Const] DOMString datapath, [Const] DOMString language, OcrEngineMode oem);
+  long Init([Const] DOMString datapath, [Const] DOMString language);
+
+  /**
+   * Returns the languages string used in the last valid initialization.
+   * If the last initialization specified "deu+hin" then that will be
+   * returned. If hin loaded eng automatically as well, then that will
+   * not be included in this list. To find the languages actually
+   * loaded use GetLoadedLanguagesAsVector.
+   * The returned string should NOT be deleted.
+   */
+  [Const] DOMString GetInitLanguagesAsString();
+
+  /**
+   * Returns the loaded languages in the vector of STRINGs.
+   * Includes all languages loaded by the last Init, including those loaded
+   * as dependencies of other loaded languages.
+   */
+  // void GetLoadedLanguagesAsVector(GenericVector<STRING>* langs);
+
+  /**
+   * Returns the available languages in the vector of STRINGs.
+   */
+  // void GetAvailableLanguagesAsVector(GenericVector<STRING>* langs);
+
+  /**
+   * Init only the lang model component of Tesseract. The only functions
+   * that work after this init are SetVariable and IsValidWord.
+   * WARNING: temporary! This function will be removed from here and placed
+   * in a separate API at some future time.
+   */
+  long InitLangMod([Const] DOMString datapath, [Const] DOMString language);
+
+  /**
+   * Init only for page layout analysis. Use only for calls to SetImage and
+   * AnalysePage. Calls that attempt recognition will generate an error.
+   */
+  void InitForAnalysePage();
+
+  /**
+   * Read a "config" file containing a set of param, value pairs.
+   * Searches the standard places: tessdata/configs, tessdata/tessconfigs
+   * and also accepts a relative or absolute path name.
+   * Note: only non-init params will be set (init params are set by Init()).
+   */
+  void ReadConfigFile([Const] DOMString filename);
+  /** Same as above, but only set debug params from the given config file. */
+  void ReadDebugConfigFile([Const] DOMString filename);
+
+  /**
+   * Set the current page segmentation mode. Defaults to PSM_SINGLE_BLOCK.
+   * The mode is stored as an IntParam so it can also be modified by
+   * ReadConfigFile or SetVariable("tessedit_pageseg_mode", mode as string).
+   */
+  void SetPageSegMode(PageSegMode mode);
+
+  /** Return the current page segmentation mode. */
+  PageSegMode GetPageSegMode();
+
+  /**
+   * Recognize a rectangle from an image and return the result as a string.
+   * May be called many times for a single Init.
+   * Currently has no error checking.
+   * Greyscale of 8 and color of 24 or 32 bits per pixel may be given.
+   * Palette color images will not work properly and must be converted to
+   * 24 bit.
+   * Binary images of 1 bit per pixel may also be given but they must be
+   * byte packed with the MSB of the first byte being the first pixel, and a
+   * 1 represents WHITE. For binary images set bytes_per_pixel=0.
+   * The recognized text is returned as a char* which is coded
+   * as UTF8 and must be freed with the delete [] operator.
+   *
+   * Note that TesseractRect is the simplified convenience interface.
+   * For advanced uses, use SetImage, (optionally) SetRectangle, Recognize,
+   * and one or more of the Get*Text functions below.
+   */
+  DOMString TesseractRect([Const] Uint8Array imagedata,
+                      long bytes_per_pixel, long bytes_per_line,
+                      long left, long top, long width, long height);
+
+  /**
+   * Call between pages or documents etc to free up memory and forget
+   * adaptive data.
+   */
+  void ClearAdaptiveClassifier();
+
+  /**
+   * @defgroup AdvancedAPI Advanced API
+   * The following methods break TesseractRect into pieces, so you can
+   * get hold of the thresholded image, get the text in different formats,
+   * get bounding boxes, confidences etc.
+   */
+   /* @{ */
+
+  /**
+   * Provide an image for Tesseract to recognize. Format is as
+   * TesseractRect above. Does not copy the image buffer, or take
+   * ownership. The source image may be destroyed after Recognize is called,
+   * either explicitly or implicitly via one of the Get*Text functions.
+   * SetImage clears all recognition results, and sets the rectangle to the
+   * full image, so it may be followed immediately by a GetUTF8Text, and it
+   * will automatically perform recognition.
+   */
+  void SetImage([Const] Uint8Array imagedata, long width, long height,
+                long bytes_per_pixel, long bytes_per_line);
+
+
+  /**
+   * Provide an image for Tesseract to recognize. As with SetImage above,
+   * Tesseract doesn't take a copy or ownership or pixDestroy the image, so
+   * it must persist until after Recognize.
+   * Pix vs raw, which to use?
+   * Use Pix where possible. A future version of Tesseract may choose to use Pix
+   * as its internal representation and discard IMAGE altogether.
+   * Because of that, an implementation that sources and targets Pix may end up
+   * with less copies than an implementation that does not.
+   */
+  void SetImage(Pix pix);
+
+  /**
+   * Set the resolution of the source image in pixels per inch so font size
+   * information can be calculated in results.  Call this after SetImage().
+   */
+  void SetSourceResolution(long ppi);
+
+  /**
+   * Restrict recognition to a sub-rectangle of the image. Call after SetImage.
+   * Each SetRectangle clears the recogntion results so multiple rectangles
+   * can be recognized with the same image.
+   */
+  void SetRectangle(long left, long top, long width, long height);
+
+  /**
+   * In extreme cases only, usually with a subclass of Thresholder, it
+   * is possible to provide a different Thresholder. The Thresholder may
+   * be preloaded with an image, settings etc, or they may be set after.
+   * Note that Tesseract takes ownership of the Thresholder and will
+   * delete it when it it is replaced or the API is destructed.
+   */
+  // void SetThresholder(ImageThresholder* thresholder);
+
+  /**
+   * Get a copy of the internal thresholded image from Tesseract.
+   * Caller takes ownership of the Pix and must pixDestroy it.
+   * May be called any time after SetImage, or after TesseractRect.
+   */
+  Pix GetThresholdedImage();
+
+  /**
+   * Get the result of page layout analysis as a leptonica-style
+   * Boxa, Pixa pair, in reading order.
+   * Can be called before or after Recognize.
+   */
+  Boxa GetRegions(PixaPtr pixa);
+
+  /**
+   * Get the textlines as a leptonica-style
+   * Boxa, Pixa pair, in reading order.
+   * Can be called before or after Recognize.
+   * If raw_image is true, then extract from the original image instead of the
+   * thresholded image and pad by raw_padding pixels.
+   * If blockids is not NULL, the block-id of each line is also returned as an
+   * array of one element per line. delete [] after use.
+   * If paraids is not NULL, the paragraph-id of each line within its block is
+   * also returned as an array of one element per line. delete [] after use.
+   */
+  Boxa GetTextlines([Const] boolean raw_image, [Const] long raw_padding,
+                     PixaPtr pixa, LongStarPtr blockids, LongStarPtr paraids);
+  /*
+     Helper method to extract from the thresholded image. (most common usage)
+  */
+  Boxa GetTextlines(PixaPtr pixa, LongStarPtr blockids);
+
+  /**
+   * Get textlines and strips of image regions as a leptonica-style Boxa, Pixa
+   * pair, in reading order. Enables downstream handling of non-rectangular
+   * regions.
+   * Can be called before or after Recognize.
+   * If blockids is not NULL, the block-id of each line is also returned as an
+   * array of one element per line. delete [] after use.
+   */
+  Boxa GetStrips(PixaPtr pixa, LongStarPtr blockids);
+
+  /**
+   * Get the words as a leptonica-style
+   * Boxa, Pixa pair, in reading order.
+   * Can be called before or after Recognize.
+   */
+  Boxa GetWords(PixaPtr pixa);
+
+  /**
+   * Gets the individual connected (text) components (created
+   * after pages segmentation step, but before recognition)
+   * as a leptonica-style Boxa, Pixa pair, in reading order.
+   * Can be called before or after Recognize.
+   * Note: the caller is responsible for calling boxaDestroy()
+   * on the returned Boxa array and pixaDestroy() on cc array.
+   */
+  Boxa GetConnectedComponents(PixaPtr cc);
+
+  /**
+   * Get the given level kind of components (block, textline, word etc.) as a
+   * leptonica-style Boxa, Pixa pair, in reading order.
+   * Can be called before or after Recognize.
+   * If blockids is not NULL, the block-id of each component is also returned
+   * as an array of one element per component. delete [] after use.
+   * If blockids is not NULL, the paragraph-id of each component with its block
+   * is also returned as an array of one element per component. delete [] after
+   * use.
+   * If raw_image is true, then portions of the original image are extracted
+   * instead of the thresholded image and padded with raw_padding.
+   * If text_only is true, then only text components are returned.
+   */
+
+  Boxa GetComponentImages([Const] PageIteratorLevel level,
+                           [Const] boolean text_only, [Const] boolean raw_image,
+                           [Const] long raw_padding,
+                           PixaPtr pixa, LongStarPtr blockids, LongStarPtr paraids);
+
+  // Helper function to get binary images with no padding (most common usage).
+  Boxa GetComponentImages([Const] PageIteratorLevel level,
+                           [Const] boolean text_only,
+                           PixaPtr pixa, LongStarPtr blockids);
+
+  /**
+   * Returns the scale factor of the thresholded image that would be returned by
+   * GetThresholdedImage() and the various GetX() methods that call
+   * GetComponentImages().
+   * Returns 0 if no thresholder has been set.
+   */
+  long GetThresholdedImageScaleFactor();
+
+  /**
+   * Runs page layout analysis in the mode set by SetPageSegMode.
+   * May optionally be called prior to Recognize to get access to just
+   * the page layout results. Returns an iterator to the results.
+   * If merge_similar_words is true, words are combined where suitable for use
+   * with a line recognizer. Use if you want to use AnalyseLayout to find the
+   * textlines, and then want to process textline fragments with an external
+   * line recognizer.
+   * Returns NULL on error or an empty page.
+   * The returned iterator must be deleted after use.
+   * WARNING! This class points to data held within the TessBaseAPI class, and
+   * therefore can only be used while the TessBaseAPI class still exists and
+   * has not been subjected to a call of Init, SetImage, Recognize, Clear, End
+   * DetectOS, or anything else that changes the internal PAGE_RES.
+   */
+  PageIterator AnalyseLayout();
+
+  PageIterator AnalyseLayout(boolean merge_similar_words);
+
+  /**
+   * Recognize the image from SetAndThresholdImage, generating Tesseract
+   * internal structures. Returns 0 on success.
+   * Optional. The Get*Text functions below will call Recognize if needed.
+   * After Recognize, the output is kept internally until the next SetImage.
+   */
+  long Recognize(ETEXT_DESC monitor);
+
+  /**
+   * Methods to retrieve information after SetAndThresholdImage(),
+   * Recognize() or TesseractRect(). (Recognize is called implicitly if needed.)
+   */
+
+  /** Variant on Recognize used for testing chopper. */
+  long RecognizeForChopTest(ETEXT_DESC monitor);
+
+  /**
+   * Turns images into symbolic text.
+   *
+   * filename can point to a single image, a multi-page TIFF,
+   * or a plain text list of image filenames.
+   *
+   * retry_config is useful for debugging. If not NULL, you can fall
+   * back to an alternate configuration if a page fails for some
+   * reason.
+   *
+   * timeout_millisec terminates processing if any single page
+   * takes too long. Set to 0 for unlimited time.
+   *
+   * renderer is responible for creating the output. For example,
+   * use the TessTextRenderer if you want plaintext output, or
+   * the TessPDFRender to produce searchable PDF.
+   *
+   * If tessedit_page_number is non-negative, will only process that
+   * single page. Works for multi-page tiff file, or filelist.
+   *
+   * Returns true if successful, false on error.
+   */
+  
+  boolean ProcessPages([Const] DOMString filename, [Const] DOMString retry_config,
+                     long timeout_millisec, TessResultRenderer renderer);
+
+  // Does the real work of ProcessPages.
+  // boolean ProcessPagesInternal([Const] DOMString filename, [Const] DOMString retry_config,
+  //                           long timeout_millisec, TessResultRendererPtr renderer);
+
+  /**
+   * Turn a single image into symbolic text.
+   *
+   * The pix is the image processed. filename and page_index are
+   * metadata used by side-effect processes, such as reading a box
+   * file or formatting as hOCR.
+   *
+   * See ProcessPages for desciptions of other parameters.
+   */
+
+  boolean ProcessPage(Pix pix, long page_index, [Const] DOMString filename,
+                    [Const] DOMString retry_config, long timeout_millisec,
+                    TessResultRenderer renderer);
+
+  /**
+   * Get a reading-order iterator to the results of LayoutAnalysis and/or
+   * Recognize. The returned iterator must be deleted after use.
+   * WARNING! This class points to data held within the TessBaseAPI class, and
+   * therefore can only be used while the TessBaseAPI class still exists and
+   * has not been subjected to a call of Init, SetImage, Recognize, Clear, End
+   * DetectOS, or anything else that changes the internal PAGE_RES.
+   */
+  ResultIterator GetIterator();
+
+  /**
+   * Get a mutable iterator to the results of LayoutAnalysis and/or Recognize.
+   * The returned iterator must be deleted after use.
+   * WARNING! This class points to data held within the TessBaseAPI class, and
+   * therefore can only be used while the TessBaseAPI class still exists and
+   * has not been subjected to a call of Init, SetImage, Recognize, Clear, End
+   * DetectOS, or anything else that changes the internal PAGE_RES.
+   */
+  // MutableIterator GetMutableIterator();
+
+  /**
+   * The recognized text is returned as a char* which is coded
+   * as UTF8 and must be freed with the delete [] operator.
+   */
+  DOMString GetUTF8Text();
+
+  /**
+   * Make a HTML-formatted string with hOCR markup from the internal
+   * data structures.
+   * page_number is 0-based but will appear in the output as 1-based.
+   */
+  DOMString GetHOCRText(long page_number);
+  
+  /**
+   * Make a TSV-formatted string from the internal data structures.
+   * page_number is 0-based but will appear in the output as 1-based.
+   * Returned string must be freed with the delete [] operator.
+   */
+  DOMString GetTSVText(long page_number);
+
+  /**
+   * The recognized text is returned as a char* which is coded in the same
+   * format as a box file used in training. Returned string must be freed with
+   * the delete [] operator.
+   * Constructs coordinates in the original image - not just the rectangle.
+   * page_number is a 0-based page index that will appear in the box file.
+   */
+  DOMString GetBoxText(long page_number);
+  /**
+   * The recognized text is returned as a char* which is coded
+   * as UNLV format Latin-1 with specific reject and suspect codes
+   * and must be freed with the delete [] operator.
+   */
+  DOMString GetUNLVText();
+  
+  /**
+   * The recognized text is returned as a char* which is coded
+   * as UTF8 and must be freed with the delete [] operator.
+   * page_number is a 0-based page index that will appear in the osd file.
+   */
+  DOMString GetOsdText(long page_number);
+
+  /** Returns the (average) confidence value between 0 and 100. */
+  long MeanTextConf();
+  /**
+   * Returns all word confidences (between 0 and 100) in an array, terminated
+   * by -1.  The calling function must delete [] after use.
+   * The number of confidences should correspond to the number of space-
+   * delimited words in GetUTF8Text.
+   */
+  IntPtr AllWordConfidences();
+
+  /**
+   * Applies the given word to the adaptive classifier if possible.
+   * The word must be SPACE-DELIMITED UTF-8 - l i k e t h i s , so it can
+   * tell the boundaries of the graphemes.
+   * Assumes that SetImage/SetRectangle have been used to set the image
+   * to the given word. The mode arg should be PSM_SINGLE_WORD or
+   * PSM_CIRCLE_WORD, as that will be used to control layout analysis.
+   * The currently set PageSegMode is preserved.
+   * Returns false if adaption was not possible for some reason.
+   */
+  boolean AdaptToWordStr(PageSegMode mode, [Const] DOMString wordstr);
+
+  /**
+   * Free up recognition results and any stored image data, without actually
+   * freeing any recognition data that would be time-consuming to reload.
+   * Afterwards, you must call SetImage or TesseractRect before doing
+   * any Recognize or Get* operation.
+   */
+  void Clear();
+
+  /**
+   * Close down tesseract and free up all memory. End() is equivalent to
+   * destructing and reconstructing your TessBaseAPI.
+   * Once End() has been used, none of the other API functions may be used
+   * other than Init and anything declared above it in the class definition.
+   */
+  void End();
+
+  /**
+   * Clear any library-level memory caches.
+   * There are a variety of expensive-to-load constant data structures (mostly
+   * language dictionaries) that are cached globally -- surviving the Init()
+   * and End() of individual TessBaseAPI's.  This function allows the clearing
+   * of these caches.
+   **/
+  void ClearPersistentCache();
+
+  /**
+   * Check whether a word is valid according to Tesseract's language model
+   * @return 0 if the word is invalid, non-zero if valid.
+   * @warning temporary! This function will be removed from here and placed
+   * in a separate API at some future time.
+   */
+  long IsValidWord([Const] DOMString word);
+  // Returns true if utf8_character is defined in the UniCharset.
+  boolean IsValidCharacter([Const] DOMString utf8_character);
+
+
+  // boolean GetTextDirection(long* out_offset, float* out_slope);
+
+  /** Sets Dict::letter_is_okay_ function to point to the given function. */
+  // void SetDictFunc(DictFunc f);
+
+  /** Sets Dict::probability_in_context_ function to point to the given
+   * function.
+   */
+  // void SetProbabilityInContextFunc(ProbabilityInContextFunc f);
+
+  /** Sets Wordrec::fill_lattice_ function to point to the given function. */
+  // void SetFillLatticeFunc(FillLatticeFunc f);
+
+  /**
+   * Estimates the Orientation And Script of the image.
+   * @return true if the image was processed successfully.
+   */
+  boolean DetectOS(OSResults osr);
+
+  /** This method returns the features associated with the input image. */
+  // void GetFeaturesForBlob(TBLOB* blob, INT_FEATURE_STRUCT* int_features,
+  //                         long* num_features, long* feature_outline_index);
+
+  /**
+   * This method returns the row to which a box of specified dimensions would
+   * belong. If no good match is found, it returns NULL.
+   */
+  // static ROW* FindRowForBox(BLOCK_LIST* blocks, long left, long top,
+  //                           long right, long bottom);
+
+  /**
+   * Method to run adaptive classifier on a blob.
+   * It returns at max num_max_matches results.
+   */
+  // void RunAdaptiveClassifier(TBLOB* blob,
+  //                            long num_max_matches,
+  //                            long* unichar_ids,
+  //                            float* ratings,
+  //                            long* num_matches_returned);
+
+  /** This method returns the string form of the specified unichar. */
+  [Const] DOMString GetUnichar(long unichar_id);
+
+  /** Return the pointer to the i-th dawg loaded into tesseract_ object. */
+  [Const] Dawg GetDawg(long i);
+
+  /** Return the number of dawgs loaded into tesseract_ object. */
+  long NumDawgs();
+
+  // [Const] Tesseract tesseract();
+
+  [Const] OcrEngineMode oem();
+
+  // void InitTruthCallback(TruthCallback *cb);
+
+  /** Return a pointer to underlying CubeRecoContext object if present. */
+  // CubeRecoContext *GetCubeRecoContext();
+
+  // void set_min_orientation_margin(double margin);
+
+  /**
+   * Return text orientation of each block as determined by an earlier run
+   * of layout analysis.
+   */
+  // void GetBlockTextOrientations(long** block_orientation,
+  //                               boolean** vertical_writing);
+
+  /** Find lines from the image making the BLOCK_LIST. */
+  // BLOCK_LIST* FindLinesCreateBlockList();
+
+  /**
+   * Delete a block list.
+   * This is to keep BLOCK_LIST pointer opaque
+   * and let go of including the other headers.
+   */
+  // static void DeleteBlockList(BLOCK_LIST* block_list);
+ /* @} */
+};
+
+interface PageIterator {
+
+  /**
+   * Moves the iterator to point to the start of the page to begin an
+   * iteration.
+   */
+  void Begin();
+
+  /**
+   * Moves the iterator to the beginning of the paragraph.
+   * This class implements this functionality by moving it to the zero indexed
+   * blob of the first (leftmost) word on the first row of the paragraph.
+   */
+  void RestartParagraph();
+
+  /**
+   * Return whether this iterator points anywhere in the first textline of a
+   * paragraph.
+   */
+  boolean IsWithinFirstTextlineOfParagraph();
+
+  /**
+   * Moves the iterator to the beginning of the text line.
+   * This class implements this functionality by moving it to the zero indexed
+   * blob of the first (leftmost) word of the row.
+   */
+  void RestartRow();
+
+  /**
+   * Moves to the start of the next object at the given level in the
+   * page hierarchy, and returns false if the end of the page was reached.
+   * NOTE that RIL_SYMBOL will skip non-text blocks, but all other
+   * PageIteratorLevel level values will visit each non-text block once.
+   * Think of non text blocks as containing a single para, with a single line,
+   * with a single imaginary word.
+   * Calls to Next with different levels may be freely intermixed.
+   * This function iterates words in right-to-left scripts correctly, if
+   * the appropriate language has been loaded into Tesseract.
+   */
+  boolean Next(PageIteratorLevel level);
+
+  /**
+   * Returns true if the iterator is at the start of an object at the given
+   * level.
+   *
+   * For instance, suppose an iterator it is pointed to the first symbol of the
+   * first word of the third line of the second paragraph of the first block in
+   * a page, then:
+   *   it.IsAtBeginningOf(RIL_BLOCK) = false
+   *   it.IsAtBeginningOf(RIL_PARA) = false
+   *   it.IsAtBeginningOf(RIL_TEXTLINE) = true
+   *   it.IsAtBeginningOf(RIL_WORD) = true
+   *   it.IsAtBeginningOf(RIL_SYMBOL) = true
+   */
+  boolean IsAtBeginningOf(PageIteratorLevel level);
+
+  /**
+   * Returns whether the iterator is positioned at the last element in a
+   * given level. (e.g. the last word in a line, the last line in a block)
+   *
+   *     Here's some two-paragraph example
+   *   text.  It starts off innocuously
+   *   enough but quickly turns bizarre.
+   *     The author inserts a cornucopia
+   *   of words to guard against confused
+   *   references.
+   *
+   * Now take an iterator it pointed to the start of "bizarre."
+   *  it.IsAtFinalElement(RIL_PARA, RIL_SYMBOL) = false
+   *  it.IsAtFinalElement(RIL_PARA, RIL_WORD) = true
+   *  it.IsAtFinalElement(RIL_BLOCK, RIL_WORD) = false
+   */
+  boolean IsAtFinalElement(PageIteratorLevel level,
+                                PageIteratorLevel element);
+
+  /**
+   * Returns whether this iterator is positioned
+   *   before other:   -1
+   *   equal to other:  0
+   *   after other:     1
+   */
+  long Cmp([Const, Ref] PageIterator other);
+
+  // ============= Accessing data ==============.
+  // Coordinate system:
+  // Integer coordinates are at the cracks between the pixels.
+  // The top-left corner of the top-left pixel in the image is at (0,0).
+  // The bottom-right corner of the bottom-right pixel in the image is at
+  // (width, height).
+  // Every bounding box goes from the top-left of the top-left contained
+  // pixel to the bottom-right of the bottom-right contained pixel, so
+  // the bounding box of the single top-left pixel in the image is:
+  // (0,0)->(1,1).
+  // If an image rectangle has been set in the API, then returned coordinates
+  // relate to the original (full) image, rather than the rectangle.
+
+  /**
+   * Controls what to include in a bounding box. Bounding boxes of all levels
+   * between RIL_WORD and RIL_BLOCK can include or exclude potential diacritics.
+   * Between layout analysis and recognition, it isn't known where all
+   * diacritics belong, so this control is used to include or exclude some
+   * diacritics that are above or below the main body of the word. In most cases
+   * where the placement is obvious, and after recognition, it doesn't make as
+   * much difference, as the diacritics will already be included in the word.
+   */
+  void SetBoundingBoxComponents(boolean include_upper_dots,
+                                boolean include_lower_dots);
+  /**
+   * Returns the bounding rectangle of the current object at the given level.
+   * See comment on coordinate system above.
+   * Returns false if there is no such object at the current position.
+   * The returned bounding box is guaranteed to match the size and position
+   * of the image returned by GetBinaryImage, but may clip foreground pixels
+   * from a grey image. The padding argument to GetImage can be used to expand
+   * the image to include more foreground pixels. See GetImage below.
+   */
+  boolean BoundingBox(PageIteratorLevel level,
+                   IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+
+  boolean BoundingBox(PageIteratorLevel level, [Const] long padding,
+                   IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+  /**
+   * Returns the bounding rectangle of the object in a coordinate system of the
+   * working image rectangle having its origin at (rect_left_, rect_top_) with
+   * respect to the original image and is scaled by a factor scale_.
+   */
+  boolean BoundingBoxInternal(PageIteratorLevel level,
+                           IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+
+  /** Returns whether there is no object of a given level. */
+  boolean Empty(PageIteratorLevel level);
+
+  /**
+   * Returns the type of the current block. See apitypes.h for
+   * PolyBlockType.
+   */
+  PolyBlockType BlockType();
+
+  /**
+   * Returns the polygon outline of the current block. The returned Pta must
+   * be ptaDestroy-ed after use. Note that the returned Pta lists the vertices
+   * of the polygon, and the last edge is the line segment between the last
+   * point and the first point. NULL will be returned if the iterator is
+   * at the end of the document or layout analysis was not used.
+   */
+  Pta BlockPolygon();
+
+  /**
+   * Returns a binary image of the current object at the given level.
+   * The position and size match the return from BoundingBoxInternal, and so
+   * this could be upscaled with respect to the original input image.
+   * Use pixDestroy to delete the image after use.
+   */
+  Pix GetBinaryImage(PageIteratorLevel level);
+
+  /**
+   * Returns an image of the current object at the given level in greyscale
+   * if available in the input. To guarantee a binary image use BinaryImage.
+   * NOTE that in order to give the best possible image, the bounds are
+   * expanded slightly over the binary connected component, by the supplied
+   * padding, so the top-left position of the returned image is returned
+   * in (left,top). These will most likely not match the coordinates
+   * returned by BoundingBox.
+   * If you do not supply an original image, you will get a binary one.
+   * Use pixDestroy to delete the image after use.
+   */
+  Pix GetImage(PageIteratorLevel level, long padding, Pix original_img,
+                IntPtr left, IntPtr top);
+
+  /**
+   * Returns the baseline of the current object at the given level.
+   * The baseline is the line that passes through (x1, y1) and (x2, y2).
+   * WARNING: with vertical text, baselines may be vertical!
+   * Returns false if there is no baseline at the current position.
+   */
+  boolean Baseline(PageIteratorLevel level,
+                IntPtr x1, IntPtr y1, IntPtr x2, IntPtr y2);
+
+  /**
+   * Returns orientation for the block the iterator points to.
+   *   orientation, writing_direction, textline_order: see publictypes.h
+   *   deskew_angle: after rotating the block so the text orientation is
+   *                 upright, how many radians does one have to rotate the
+   *                 block anti-clockwise for it to be level?
+   *                   -Pi/4 <= deskew_angle <= Pi/4
+   */
+  void Orientation(Orientation orientation,
+                   WritingDirection writing_direction,
+                   TextlineOrder textline_order,
+                   FloatPtr deskew_angle);
+
+  /**
+   * Returns information about the current paragraph, if available.
+   *
+   *   justification -
+   *     LEFT if ragged right, or fully justified and script is left-to-right.
+   *     RIGHT if ragged left, or fully justified and script is right-to-left.
+   *     unknown if it looks like source code or we have very few lines.
+   *   is_list_item -
+   *     true if we believe this is a member of an ordered or unordered list.
+   *   is_crown -
+   *     true if the first line of the paragraph is aligned with the other
+   *     lines of the paragraph even though subsequent paragraphs have first
+   *     line indents.  This typically indicates that this is the continuation
+   *     of a previous paragraph or that it is the very first paragraph in
+   *     the chapter.
+   *   first_line_indent -
+   *     For LEFT aligned paragraphs, the first text line of paragraphs of
+   *     this kind are indented this many pixels from the left edge of the
+   *     rest of the paragraph.
+   *     for RIGHT aligned paragraphs, the first text line of paragraphs of
+   *     this kind are indented this many pixels from the right edge of the
+   *     rest of the paragraph.
+   *     NOTE 1: This value may be negative.
+   *     NOTE 2: if *is_crown == true, the first line of this paragraph is
+   *             actually flush, and first_line_indent is set to the "common"
+   *             first_line_indent for subsequent paragraphs in this block
+   *             of text.
+   */
+  void ParagraphInfo(ParagraphJustification justification,
+                     BoolPtr is_list_item,
+                     BoolPtr is_crown,
+                     IntPtr first_line_indent);
+
+  // If the current WERD_RES (it_->word()) is not NULL, sets the BlamerBundle
+  // of the current word to the given pointer (takes ownership of the pointer)
+  // and returns true.
+  // Can only be used when iterating on the word level.
+  // boolean SetWordBlamerBundle(BlamerBundle *blamer_bundle);
+
+};
+
+interface ResultIterator {
+  void ResultIterator([Const, Ref] ResultIterator resit);
+
+  /**
+   * Moves the iterator to point to the start of the page to begin an
+   * iteration.
+   */
+  void Begin();
+
+  /**
+   * Moves the iterator to the beginning of the paragraph.
+   * This class implements this functionality by moving it to the zero indexed
+   * blob of the first (leftmost) word on the first row of the paragraph.
+   */
+  void RestartParagraph();
+
+  /**
+   * Return whether this iterator points anywhere in the first textline of a
+   * paragraph.
+   */
+  boolean IsWithinFirstTextlineOfParagraph();
+
+  /**
+   * Moves the iterator to the beginning of the text line.
+   * This class implements this functionality by moving it to the zero indexed
+   * blob of the first (leftmost) word of the row.
+   */
+  void RestartRow();
+
+  /**
+   * Moves to the start of the next object at the given level in the
+   * page hierarchy, and returns false if the end of the page was reached.
+   * NOTE that RIL_SYMBOL will skip non-text blocks, but all other
+   * PageIteratorLevel level values will visit each non-text block once.
+   * Think of non text blocks as containing a single para, with a single line,
+   * with a single imaginary word.
+   * Calls to Next with different levels may be freely intermixed.
+   * This function iterates words in right-to-left scripts correctly, if
+   * the appropriate language has been loaded into Tesseract.
+   */
+  boolean Next(PageIteratorLevel level);
+
+  /**
+   * Returns true if the iterator is at the start of an object at the given
+   * level.
+   *
+   * For instance, suppose an iterator it is pointed to the first symbol of the
+   * first word of the third line of the second paragraph of the first block in
+   * a page, then:
+   *   it.IsAtBeginningOf(RIL_BLOCK) = false
+   *   it.IsAtBeginningOf(RIL_PARA) = false
+   *   it.IsAtBeginningOf(RIL_TEXTLINE) = true
+   *   it.IsAtBeginningOf(RIL_WORD) = true
+   *   it.IsAtBeginningOf(RIL_SYMBOL) = true
+   */
+  boolean IsAtBeginningOf(PageIteratorLevel level);
+
+  /**
+   * Returns whether the iterator is positioned at the last element in a
+   * given level. (e.g. the last word in a line, the last line in a block)
+   *
+   *     Here's some two-paragraph example
+   *   text.  It starts off innocuously
+   *   enough but quickly turns bizarre.
+   *     The author inserts a cornucopia
+   *   of words to guard against confused
+   *   references.
+   *
+   * Now take an iterator it pointed to the start of "bizarre."
+   *  it.IsAtFinalElement(RIL_PARA, RIL_SYMBOL) = false
+   *  it.IsAtFinalElement(RIL_PARA, RIL_WORD) = true
+   *  it.IsAtFinalElement(RIL_BLOCK, RIL_WORD) = false
+   */
+  boolean IsAtFinalElement(PageIteratorLevel level,
+                                PageIteratorLevel element);
+
+  /**
+   * Returns whether this iterator is positioned
+   *   before other:   -1
+   *   equal to other:  0
+   *   after other:     1
+   */
+  long Cmp([Const, Ref] PageIterator other);
+
+  // ============= Accessing data ==============.
+  // Coordinate system:
+  // Integer coordinates are at the cracks between the pixels.
+  // The top-left corner of the top-left pixel in the image is at (0,0).
+  // The bottom-right corner of the bottom-right pixel in the image is at
+  // (width, height).
+  // Every bounding box goes from the top-left of the top-left contained
+  // pixel to the bottom-right of the bottom-right contained pixel, so
+  // the bounding box of the single top-left pixel in the image is:
+  // (0,0)->(1,1).
+  // If an image rectangle has been set in the API, then returned coordinates
+  // relate to the original (full) image, rather than the rectangle.
+
+  /**
+   * Controls what to include in a bounding box. Bounding boxes of all levels
+   * between RIL_WORD and RIL_BLOCK can include or exclude potential diacritics.
+   * Between layout analysis and recognition, it isn't known where all
+   * diacritics belong, so this control is used to include or exclude some
+   * diacritics that are above or below the main body of the word. In most cases
+   * where the placement is obvious, and after recognition, it doesn't make as
+   * much difference, as the diacritics will already be included in the word.
+   */
+  void SetBoundingBoxComponents(boolean include_upper_dots,
+                                boolean include_lower_dots);
+  /**
+   * Returns the bounding rectangle of the current object at the given level.
+   * See comment on coordinate system above.
+   * Returns false if there is no such object at the current position.
+   * The returned bounding box is guaranteed to match the size and position
+   * of the image returned by GetBinaryImage, but may clip foreground pixels
+   * from a grey image. The padding argument to GetImage can be used to expand
+   * the image to include more foreground pixels. See GetImage below.
+   */
+  boolean BoundingBox(PageIteratorLevel level,
+                   IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+
+  boolean BoundingBox(PageIteratorLevel level, [Const] long padding,
+                   IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+  /**
+   * Returns the bounding rectangle of the object in a coordinate system of the
+   * working image rectangle having its origin at (rect_left_, rect_top_) with
+   * respect to the original image and is scaled by a factor scale_.
+   */
+  boolean BoundingBoxInternal(PageIteratorLevel level,
+                           IntPtr left, IntPtr top, IntPtr right, IntPtr bottom);
+
+  /** Returns whether there is no object of a given level. */
+  boolean Empty(PageIteratorLevel level);
+
+  /**
+   * Returns the type of the current block. See apitypes.h for
+   * PolyBlockType.
+   */
+  PolyBlockType BlockType();
+
+  /**
+   * Returns the polygon outline of the current block. The returned Pta must
+   * be ptaDestroy-ed after use. Note that the returned Pta lists the vertices
+   * of the polygon, and the last edge is the line segment between the last
+   * point and the first point. NULL will be returned if the iterator is
+   * at the end of the document or layout analysis was not used.
+   */
+  Pta BlockPolygon();
+
+  /**
+   * Returns a binary image of the current object at the given level.
+   * The position and size match the return from BoundingBoxInternal, and so
+   * this could be upscaled with respect to the original input image.
+   * Use pixDestroy to delete the image after use.
+   */
+  Pix GetBinaryImage(PageIteratorLevel level);
+
+  /**
+   * Returns an image of the current object at the given level in greyscale
+   * if available in the input. To guarantee a binary image use BinaryImage.
+   * NOTE that in order to give the best possible image, the bounds are
+   * expanded slightly over the binary connected component, by the supplied
+   * padding, so the top-left position of the returned image is returned
+   * in (left,top). These will most likely not match the coordinates
+   * returned by BoundingBox.
+   * If you do not supply an original image, you will get a binary one.
+   * Use pixDestroy to delete the image after use.
+   */
+  Pix GetImage(PageIteratorLevel level, long padding, Pix original_img,
+                IntPtr left, IntPtr top);
+
+  /**
+   * Returns the baseline of the current object at the given level.
+   * The baseline is the line that passes through (x1, y1) and (x2, y2).
+   * WARNING: with vertical text, baselines may be vertical!
+   * Returns false if there is no baseline at the current position.
+   */
+  boolean Baseline(PageIteratorLevel level,
+                IntPtr x1, IntPtr y1, IntPtr x2, IntPtr y2);
+
+  /**
+   * Returns orientation for the block the iterator points to.
+   *   orientation, writing_direction, textline_order: see publictypes.h
+   *   deskew_angle: after rotating the block so the text orientation is
+   *                 upright, how many radians does one have to rotate the
+   *                 block anti-clockwise for it to be level?
+   *                   -Pi/4 <= deskew_angle <= Pi/4
+   */
+  void Orientation(Orientation orientation,
+                   WritingDirection writing_direction,
+                   TextlineOrder textline_order,
+                   FloatPtr deskew_angle);
+
+  /**
+   * Returns information about the current paragraph, if available.
+   *
+   *   justification -
+   *     LEFT if ragged right, or fully justified and script is left-to-right.
+   *     RIGHT if ragged left, or fully justified and script is right-to-left.
+   *     unknown if it looks like source code or we have very few lines.
+   *   is_list_item -
+   *     true if we believe this is a member of an ordered or unordered list.
+   *   is_crown -
+   *     true if the first line of the paragraph is aligned with the other
+   *     lines of the paragraph even though subsequent paragraphs have first
+   *     line indents.  This typically indicates that this is the continuation
+   *     of a previous paragraph or that it is the very first paragraph in
+   *     the chapter.
+   *   first_line_indent -
+   *     For LEFT aligned paragraphs, the first text line of paragraphs of
+   *     this kind are indented this many pixels from the left edge of the
+   *     rest of the paragraph.
+   *     for RIGHT aligned paragraphs, the first text line of paragraphs of
+   *     this kind are indented this many pixels from the right edge of the
+   *     rest of the paragraph.
+   *     NOTE 1: This value may be negative.
+   *     NOTE 2: if *is_crown == true, the first line of this paragraph is
+   *             actually flush, and first_line_indent is set to the "common"
+   *             first_line_indent for subsequent paragraphs in this block
+   *             of text.
+   */
+  void ParagraphInfo(ParagraphJustification justification,
+                     BoolPtr is_list_item,
+                     BoolPtr is_crown,
+                     IntPtr first_line_indent);
+
+  // If the current WERD_RES (it_->word()) is not NULL, sets the BlamerBundle
+  // of the current word to the given pointer (takes ownership of the pointer)
+  // and returns true.
+  // Can only be used when iterating on the word level.
+  // boolean SetWordBlamerBundle(BlamerBundle *blamer_bundle);
+
+  // ResultIterator StartOfParagraph([Const, Ref] LTRResultIterator resit);
+
+
+  /**
+   * Return whether the current paragraph's dominant reading direction
+   * is left-to-right (as opposed to right-to-left).
+  */
+  boolean ParagraphIsLtr();
+
+  // Returns the null terminated UTF-8 encoded text string for the current
+  // object at the given level. Use delete [] to free after use.
+  DOMString GetUTF8Text(PageIteratorLevel level);
+
+  // Set the string inserted at the end of each text line. "\n" by default.
+  void SetLineSeparator([Const] DOMString new_line);
+
+  // Set the string inserted at the end of each paragraph. "\n" by default.
+  void SetParagraphSeparator([Const] DOMString new_para);
+
+  // Returns the mean confidence of the current object at the given level.
+  // The number should be interpreted as a percent probability. (0.0f-100.0f)
+  float Confidence(PageIteratorLevel level);
+
+  // ============= Functions that refer to words only ============.
+
+  // Returns the font attributes of the current word. If iterating at a higher
+  // level object than words, eg textlines, then this will return the
+  // attributes of the first word in that textline.
+  // The actual return value is a string representing a font name. It points
+  // to an internal table and SHOULD NOT BE DELETED. Lifespan is the same as
+  // the iterator itself, ie rendered invalid by various members of
+  // TessBaseAPI, including Init, SetImage, End or deleting the TessBaseAPI.
+  // Pointsize is returned in printers points (1/72 inch.)
+  [Const] DOMString WordFontAttributes(BoolPtr is_bold,
+                                 BoolPtr is_italic,
+                                 BoolPtr is_underlined,
+                                 BoolPtr is_monospace,
+                                 BoolPtr is_serif,
+                                 BoolPtr is_smallcaps,
+                                 IntPtr pointsize,
+                                 IntPtr font_id);
+
+  // Return the name of the language used to recognize this word.
+  // On error, NULL.  Do not delete this pointer.
+  [Const] DOMString WordRecognitionLanguage();
+
+  // Return the overall directionality of this word.
+  StrongScriptDirection WordDirection();
+
+  // Returns true if the current word was found in a dictionary.
+  boolean WordIsFromDictionary();
+
+  // Returns true if the current word is numeric.
+  boolean WordIsNumeric();
+
+  // Returns true if the word contains blamer information.
+  boolean HasBlamerInfo();
+
+  // Returns the pointer to ParamsTrainingBundle stored in the BlamerBundle
+  // of the current word.
+  // const void *GetParamsTrainingBundle();
+
+  // Returns a pointer to the string with blamer information for this word.
+  // Assumes that the word's blamer_bundle is not NULL.
+  // const char *GetBlamerDebug();
+
+  // Returns a pointer to the string with misadaption information for this word.
+  // Assumes that the word's blamer_bundle is not NULL.
+  // const char *GetBlamerMisadaptionDebug();
+
+  // Returns true if a truth string was recorded for the current word.
+  boolean HasTruthString();
+
+  // Returns true if the given string is equivalent to the truth string for
+  // the current word.
+  boolean EquivalentToTruth([Const] DOMString str);
+
+  // Returns a null terminated UTF-8 encoded truth string for the current word.
+  // Use delete [] to free after use.
+  DOMString WordTruthUTF8Text();
+
+  // Returns a null terminated UTF-8 encoded normalized OCR string for the
+  // current word. Use delete [] to free after use.
+  DOMString WordNormedUTF8Text();
+
+  // Returns a pointer to serialized choice lattice.
+  // Fills lattice_size with the number of bytes in lattice data.
+  [Const] DOMString WordLattice(IntPtr lattice_size);
+
+  // ============= Functions that refer to symbols only ============.
+
+  // Returns true if the current symbol is a superscript.
+  // If iterating at a higher level object than symbols, eg words, then
+  // this will return the attributes of the first symbol in that word.
+  boolean SymbolIsSuperscript();
+  // Returns true if the current symbol is a subscript.
+  // If iterating at a higher level object than symbols, eg words, then
+  // this will return the attributes of the first symbol in that word.
+  boolean SymbolIsSubscript();
+  // Returns true if the current symbol is a dropcap.
+  // If iterating at a higher level object than symbols, eg words, then
+  // this will return the attributes of the first symbol in that word.
+  boolean SymbolIsDropcap();
+};
+
+
+interface WordChoiceIterator {
+  void WordChoiceIterator([Const, Ref] ResultIterator result_it);
+  boolean Next();
+  [Const] DOMString GetUTF8Text();
+  float Confidence();
+};
+
+
+interface ChoiceIterator {
+  void ChoiceIterator([Const, Ref] ResultIterator result_it);
+  boolean Next();
+  [Const] DOMString GetUTF8Text();
+  float Confidence();
+};
+
+
+// interface MutableIterator {};
+
+interface Pix {
+    readonly attribute long w;           // width in pixels                 
+    readonly attribute long h;           // height in pixels                
+    readonly attribute long d;           // depth in bits (bpp)             
+    readonly attribute long spp;         // number of samples per pixel     
+    readonly attribute long wpl;         // 32-bit words/line               
+    readonly attribute long refcount;    // reference count (1 if no clones)
+    readonly attribute long xres;        // image res (ppi) in x direction   (use 0 if unknown)              
+    readonly attribute long yres;        // image res (ppi) in y direction   (use 0 if unknown)              
+    readonly attribute long informat;    // input file format; IFF_*        
+    readonly attribute long special;     // special instructions for I/O; et
+    readonly attribute DOMString text;
+    readonly attribute PixColormap colormap;
+    readonly attribute Uint32Array data;
+};
+
+interface PixColormap {
+    readonly attribute any            array;     /* colormap table (array of RGBA_QUAD)     */
+    readonly attribute long          depth;     /* of pix (1, 2, 4 or 8 bpp)               */
+    readonly attribute long          nalloc;    /* number of color entries allocated       */
+    readonly attribute long          n;         /* number of color entries used            */
+};
+
+interface OSResults {
+    void OSResults();
+    [Value] readonly attribute OSBestResult best_result;  
+    readonly attribute UNICHARSET unicharset;
+    void print_scores();  
+};
+
+interface UNICHARSET {
+  [Const] DOMString get_script_from_script_id(long id);
+  long get_script_id_from_name([Const] DOMString script_name);
+  long get_script_table_size();
+};
+
+interface OSBestResult {
+    readonly attribute long orientation_id;
+    readonly attribute long script_id;
+    readonly attribute float sconfidence;
+    readonly attribute float oconfidence;
+};
+
+
+// interface GenericVector {
+//   void GenericVector();
+//   long size();
+//   long size_reserved();
+//   long length();
+//   // Return true if empty.
+//   boolean empty();
+// };
+
+interface Pta {
+  readonly attribute long n;  /* actual number of pts              */
+  readonly attribute long nalloc; /* size of allocated arrays          */
+  readonly attribute long refcount; /* reference count 1 if no clones  */
+  readonly attribute FloatPtr x; /* arrays of floats                  */
+  readonly attribute FloatPtr y; 
+};
+
+interface TessResultRenderer {
+  boolean BeginDocument([Const] DOMString title);
+  boolean AddImage(TessBaseAPI api);
+  boolean EndDocument();
+  boolean happy();
+  [Const] DOMString file_extension();
+  [Const] DOMString title();
+  long imagenum();
+};
+
+interface TessPDFRenderer {
+  void TessPDFRenderer([Const] DOMString outputbase, [Const] DOMString datadir, boolean textonly );
+  boolean BeginDocument([Const] DOMString title);
+  boolean AddImage(TessBaseAPI api);
+  boolean EndDocument();
+  boolean happy();
+  [Const] DOMString file_extension();
+  [Const] DOMString title();
+  long imagenum();
+};
+
+interface Dawg {};
+
+interface IntPtr {};
+interface LongStarPtr {};
+interface DoublePtr {};
+interface FloatPtr {};
+interface BoolPtr {};
+
+interface PixaPtr {};
+interface BoxPtr {};
+interface PixPtr {};
+
+interface Pixa {
+  readonly attribute long n; /* number of box in ptr array        */
+  readonly attribute long nalloc; /* number of box ptrs allocated      */
+  readonly attribute long refcount; /* reference count 1 if no clones  */
+  readonly attribute PixPtr pix;
+  readonly attribute Boxa boxa;
+};
+
+interface Boxa {
+  readonly attribute long n; /* number of box in ptr array        */
+  readonly attribute long nalloc; /* number of box ptrs allocated      */
+  readonly attribute long refcount; /* reference count 1 if no clones  */
+  readonly attribute BoxPtr box;
+};
+
+interface Box {
+  readonly attribute long x;
+  readonly attribute long y;
+  readonly attribute long w;
+  readonly attribute long h;
+  readonly attribute long refcount; /* reference count 1 if no clones  */
+};
+
+
+interface ETEXT_DESC {
+  // readonly attribute long count;                 // chars in this buffer(0)
+  // readonly attribute long  progress;              // percent complete increasing (0-100)
+  // readonly attribute long  more_to_come;           // true if not last
+  // readonly attribute long  ocr_alive;     // ocr sets to 1, HP 0
+  // readonly attribute long  err_code;               // for errcode use
+};
+
+enum PageIteratorLevel { 
+  "RIL_BLOCK", 
+  "RIL_PARA", 
+  "RIL_TEXTLINE", 
+  "RIL_WORD", 
+  "RIL_SYMBOL"
+};
+
+enum OcrEngineMode {
+  "OEM_TESSERACT_ONLY",           // Run Tesseract only - fastest; deprecated
+  "OEM_LSTM_ONLY",                // Run just the LSTM line recognizer.
+  "OEM_TESSERACT_LSTM_COMBINED",  // Run the LSTM recognizer, but allow fallback
+                                // to Tesseract when things get difficult.
+                                // deprecated
+  "OEM_DEFAULT",                  // Specify this mode when calling init_*(),
+                                // to indicate that any of the above modes
+                                // should be automatically inferred from the
+                                // variables in the language-specific config,
+                                // command-line configs, or if not specified
+                                // in any of the above should be set to the
+                                // default OEM_TESSERACT_ONLY.
+  "OEM_COUNT"                     // Number of OEMs
+};
+
+/**
+ * Possible types for a POLY_BLOCK or ColPartition.
+ * Must be kept in sync with kPBColors in polyblk.cpp and PTIs*Type functions
+ * below, as well as kPolyBlockNames in publictypes.cpp.
+ * Used extensively by ColPartition, and POLY_BLOCK.
+*/
+enum PolyBlockType {
+  "PT_UNKNOWN",        // Type is not yet known. Keep as the first element.
+  "PT_FLOWING_TEXT",   // Text that lives inside a column.
+  "PT_HEADING_TEXT",   // Text that spans more than one column.
+  "PT_PULLOUT_TEXT",   // Text that is in a cross-column pull-out region.
+  "PT_EQUATION",       // Partition belonging to an equation region.
+  "PT_INLINE_EQUATION",  // Partition has inline equation.
+  "PT_TABLE",          // Partition belonging to a table region.
+  "PT_VERTICAL_TEXT",  // Text-line runs vertically.
+  "PT_CAPTION_TEXT",   // Text that belongs to an image.
+  "PT_FLOWING_IMAGE",  // Image that lives inside a column.
+  "PT_HEADING_IMAGE",  // Image that spans more than one column.
+  "PT_PULLOUT_IMAGE",  // Image that is in a cross-column pull-out region.
+  "PT_HORZ_LINE",      // Horizontal Line.
+  "PT_VERT_LINE",      // Vertical Line.
+  "PT_NOISE",          // Lies outside of any column.
+  "PT_COUNT"
+};
+
+
+/**
+ *  +------------------+  Orientation Example:
+ *  | 1 Aaaa Aaaa Aaaa |  ====================
+ *  | Aaa aa aaa aa    |  To left is a diagram of some (1) English and
+ *  | aaaaaa A aa aaa. |  (2) Chinese text and a (3) photo credit.
+ *  |                2 |
+ *  |   #######  c c C |  Upright Latin characters are represented as A and a.
+ *  |   #######  c c c |  '<' represents a latin character rotated
+ *  | < #######  c c c |      anti-clockwise 90 degrees.
+ *  | < #######  c   c |
+ *  | < #######  .   c |  Upright Chinese characters are represented C and c.
+ *  | 3 #######      c |
+ *  +------------------+  NOTA BENE: enum values here should match goodoc.proto
+
+ * If you orient your head so that "up" aligns with Orientation,
+ * then the characters will appear "right side up" and readable.
+ *
+ * In the example above, both the English and Chinese paragraphs are oriented
+ * so their "up" is the top of the page (page up).  The photo credit is read
+ * with one's head turned leftward ("up" is to page left).
+ *
+ * The values of this enum match the convention of Tesseract's osdetect.h
+*/
+interface Orientation {};
+enum Orientation_ {
+  "ORIENTATION_PAGE_UP",
+  "ORIENTATION_PAGE_RIGHT",
+  "ORIENTATION_PAGE_DOWN",
+  "ORIENTATION_PAGE_LEFT",
+};
+
+/**
+ * The grapheme clusters within a line of text are laid out logically
+ * in this direction, judged when looking at the text line rotated so that
+ * its Orientation is "page up".
+ *
+ * For English text, the writing direction is left-to-right.  For the
+ * Chinese text in the above example, the writing direction is top-to-bottom.
+*/
+interface WritingDirection {};
+enum WritingDirection_ {
+  "WRITING_DIRECTION_LEFT_TO_RIGHT",
+  "WRITING_DIRECTION_RIGHT_TO_LEFT",
+  "WRITING_DIRECTION_TOP_TO_BOTTOM",
+};
+
+/**
+ * The text lines are read in the given sequence.
+ *
+ * In English, the order is top-to-bottom.
+ * In Chinese, vertical text lines are read right-to-left.  Mongolian is
+ * written in vertical columns top to bottom like Chinese, but the lines
+ * order left-to right.
+ *
+ * Note that only some combinations make sense.  For example,
+ * WRITING_DIRECTION_LEFT_TO_RIGHT implies TEXTLINE_ORDER_TOP_TO_BOTTOM
+*/
+interface TextlineOrder {};
+enum TextlineOrder_ {
+  "TEXTLINE_ORDER_LEFT_TO_RIGHT",
+  "TEXTLINE_ORDER_RIGHT_TO_LEFT",
+  "TEXTLINE_ORDER_TOP_TO_BOTTOM",
+};
+
+
+interface ParagraphJustification {
+};
+
+enum ParagraphJustification_ { 
+  "JUSTIFICATION_UNKNOWN", 
+  "JUSTIFICATION_LEFT", 
+  "JUSTIFICATION_CENTER", 
+  "JUSTIFICATION_RIGHT" 
+};
+
+
+/**
+ * Possible modes for page layout analysis. These *must* be kept in order
+ * of decreasing amount of layout analysis to be done, except for OSD_ONLY,
+ * so that the inequality test macros below work.
+*/
+enum PageSegMode {
+  "PSM_OSD_ONLY",       ///< Orientation and script detection only.
+  "PSM_AUTO_OSD",       ///< Automatic page segmentation with orientation and
+                      ///< script detection. (OSD)
+  "PSM_AUTO_ONLY",      ///< Automatic page segmentation, but no OSD, or OCR.
+  "PSM_AUTO",           ///< Fully automatic page segmentation, but no OSD.
+  "PSM_SINGLE_COLUMN",  ///< Assume a single column of text of variable sizes.
+  "PSM_SINGLE_BLOCK_VERT_TEXT",  ///< Assume a single uniform block of vertically
+                               ///< aligned text.
+  "PSM_SINGLE_BLOCK",   ///< Assume a single uniform block of text. (Default.)
+  "PSM_SINGLE_LINE",    ///< Treat the image as a single text line.
+  "PSM_SINGLE_WORD",    ///< Treat the image as a single word.
+  "PSM_CIRCLE_WORD",    ///< Treat the image as a single word in a circle.
+  "PSM_SINGLE_CHAR",    ///< Treat the image as a single character.
+  "PSM_SPARSE_TEXT",    ///< Find as much text as possible in no particular order.
+  "PSM_SPARSE_TEXT_OSD",  ///< Sparse text with orientation and script det.
+  "PSM_RAW_LINE",       ///< Treat the image as a single text line, bypassing
+                      ///< hacks that are Tesseract-specific.
+
+  "PSM_COUNT"           ///< Number of enum entries.
+};
+
+enum StrongScriptDirection {
+  "DIR_NEUTRAL",        // Text contains only neutral characters.
+  "DIR_LEFT_TO_RIGHT",  // Text contains no Right-to-Left characters.
+  "DIR_RIGHT_TO_LEFT",  // Text contains no Left-to-Right characters.
+  "DIR_MIX",            // Text contains a mixture of left-to-right
+                          // and right-to-left characters.
+};
