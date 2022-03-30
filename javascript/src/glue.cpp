@@ -674,10 +674,6 @@ const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Version_0(TessBaseA
   return self->Version();
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_CatchSignals_0(TessBaseAPI* self) {
-  self->CatchSignals();
-}
-
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetInputName_1(TessBaseAPI* self, const char* name) {
   self->SetInputName(name);
 }
@@ -730,10 +726,6 @@ const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetStringVariable_1
   return self->GetStringVariable(name);
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_PrintVariables_0(TessBaseAPI* self) {
-  self->PrintVariables();
-}
-
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Init_2(TessBaseAPI* self, const char* datapath, const char* language) {
   return self->Init(datapath, language);
 }
@@ -744,10 +736,6 @@ int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Init_3(TessBaseAPI* self, c
 
 const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetInitLanguagesAsString_0(TessBaseAPI* self) {
   return self->GetInitLanguagesAsString();
-}
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_InitLangMod_2(TessBaseAPI* self, const char* datapath, const char* language) {
-  return self->InitLangMod(datapath, language);
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_InitForAnalysePage_0(TessBaseAPI* self) {
@@ -844,10 +832,6 @@ PageIterator* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_AnalyseLayout_1(T
 
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Recognize_1(TessBaseAPI* self, ETEXT_DESC* monitor) {
   return self->Recognize(monitor);
-}
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_RecognizeForChopTest_1(TessBaseAPI* self, ETEXT_DESC* monitor) {
-  return self->RecognizeForChopTest(monitor);
 }
 
 bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_ProcessPages_4(TessBaseAPI* self, const char* filename, const char* retry_config, int timeout_millisec, TessResultRenderer* renderer) {
@@ -1186,4 +1170,3 @@ PageSegMode EMSCRIPTEN_KEEPALIVE emscripten_enum_PageSegMode_PSM_COUNT() {
 }
 
 }
-

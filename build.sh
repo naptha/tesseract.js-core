@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-SCRIPT_ROOT=$(dirname $0)/wasm/build-scripts
+SCRIPT_ROOT=$(dirname $0)/build-scripts
 
 # verify Emscripten version
 emcc -v
@@ -26,3 +26,5 @@ $SCRIPT_ROOT/build-libwebp.sh
 $SCRIPT_ROOT/build-leptonica.sh
 # build tesseract
 $SCRIPT_ROOT/build-tesseract.sh
+
+cp ./third_party/tesseract/build/bin/* .

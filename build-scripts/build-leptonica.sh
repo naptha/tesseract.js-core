@@ -31,5 +31,5 @@ rm -rf build
 mkdir -p build
 cd build
 emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
-emmake make install -j
+emmake make install
 cd $ROOT_DIR

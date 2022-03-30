@@ -1,16 +1,16 @@
-#include "baseapi.h"
-#include "resultiterator.h"
-#include "allheaders.h"
-#include "osdetect.h"
-#include "ocrclass.h"
+#include <tesseract/baseapi.h>
+#include <tesseract/resultiterator.h>
+#include <allheaders.h>
+#include <tesseract/osdetect.h>
+#include <tesseract/ocrclass.h>
 #include "dawg.h"
 #include "unicharset.h"
-#include "renderer.h"
+#include <tesseract/renderer.h>
 
 namespace tesseract {
 	typedef unsigned char* Uint8Array;
 	typedef unsigned int* Uint32Array;
-	
+
 	typedef int IntPtr;
 	typedef double DoublePtr;
 	typedef float FloatPtr;

@@ -6,13 +6,6 @@ interface TessBaseAPI {
    */
   [Const] DOMString Version();
 
-
-  /**
-   * Writes the thresholded image to stderr as a PBM file on receipt of a
-   * SIGSEGV, SIGFPE, or SIGBUS signal. (Linux/Unix only).
-   */
-  void CatchSignals();
-
   /**
    * Set the name of the input file. Needed for training and
    * reading a UNLV zone file, and for searchable PDF output.
@@ -63,11 +56,6 @@ interface TessBaseAPI {
    * parameter if it was found among Tesseract parameters.
    */
   [Const] DOMString GetStringVariable([Const] DOMString name);
-
-  /**
-   * Print Tesseract parameters to the given file.
-   */
-  void PrintVariables();
 
   /**
    * Get value of named variable as a string, if it exists.
@@ -142,14 +130,6 @@ interface TessBaseAPI {
    * Returns the available languages in the vector of STRINGs.
    */
   // void GetAvailableLanguagesAsVector(GenericVector<STRING>* langs);
-
-  /**
-   * Init only the lang model component of Tesseract. The only functions
-   * that work after this init are SetVariable and IsValidWord.
-   * WARNING: temporary! This function will be removed from here and placed
-   * in a separate API at some future time.
-   */
-  long InitLangMod([Const] DOMString datapath, [Const] DOMString language);
 
   /**
    * Init only for page layout analysis. Use only for calls to SetImage and
@@ -382,9 +362,6 @@ interface TessBaseAPI {
    * Recognize() or TesseractRect(). (Recognize is called implicitly if needed.)
    */
 
-  /** Variant on Recognize used for testing chopper. */
-  long RecognizeForChopTest(ETEXT_DESC monitor);
-
   /**
    * Turns images into symbolic text.
    *
@@ -407,7 +384,7 @@ interface TessBaseAPI {
    *
    * Returns true if successful, false on error.
    */
-  
+
   boolean ProcessPages([Const] DOMString filename, [Const] DOMString retry_config,
                      long timeout_millisec, TessResultRenderer renderer);
 
@@ -461,7 +438,7 @@ interface TessBaseAPI {
    * page_number is 0-based but will appear in the output as 1-based.
    */
   DOMString GetHOCRText(long page_number);
-  
+
   /**
    * Make a TSV-formatted string from the internal data structures.
    * page_number is 0-based but will appear in the output as 1-based.
@@ -483,7 +460,7 @@ interface TessBaseAPI {
    * and must be freed with the delete [] operator.
    */
   DOMString GetUNLVText();
-  
+
   /**
    * The recognized text is returned as a char* which is coded
    * as UTF8 and must be freed with the delete [] operator.
@@ -1216,15 +1193,15 @@ interface ChoiceIterator {
 // interface MutableIterator {};
 
 interface Pix {
-    readonly attribute long w;           // width in pixels                 
-    readonly attribute long h;           // height in pixels                
-    readonly attribute long d;           // depth in bits (bpp)             
-    readonly attribute long spp;         // number of samples per pixel     
-    readonly attribute long wpl;         // 32-bit words/line               
+    readonly attribute long w;           // width in pixels
+    readonly attribute long h;           // height in pixels
+    readonly attribute long d;           // depth in bits (bpp)
+    readonly attribute long spp;         // number of samples per pixel
+    readonly attribute long wpl;         // 32-bit words/line
     readonly attribute long refcount;    // reference count (1 if no clones)
-    readonly attribute long xres;        // image res (ppi) in x direction   (use 0 if unknown)              
-    readonly attribute long yres;        // image res (ppi) in y direction   (use 0 if unknown)              
-    readonly attribute long informat;    // input file format; IFF_*        
+    readonly attribute long xres;        // image res (ppi) in x direction   (use 0 if unknown)
+    readonly attribute long yres;        // image res (ppi) in y direction   (use 0 if unknown)
+    readonly attribute long informat;    // input file format; IFF_*
     readonly attribute long special;     // special instructions for I/O; et
     readonly attribute DOMString text;
     readonly attribute PixColormap colormap;
@@ -1240,9 +1217,9 @@ interface PixColormap {
 
 interface OSResults {
     void OSResults();
-    [Value] readonly attribute OSBestResult best_result;  
+    [Value] readonly attribute OSBestResult best_result;
     readonly attribute UNICHARSET unicharset;
-    void print_scores();  
+    void print_scores();
 };
 
 interface UNICHARSET {
@@ -1273,7 +1250,7 @@ interface Pta {
   readonly attribute long nalloc; /* size of allocated arrays          */
   readonly attribute long refcount; /* reference count 1 if no clones  */
   readonly attribute FloatPtr x; /* arrays of floats                  */
-  readonly attribute FloatPtr y; 
+  readonly attribute FloatPtr y;
 };
 
 interface TessResultRenderer {
@@ -1341,11 +1318,11 @@ interface ETEXT_DESC {
   // readonly attribute long  err_code;               // for errcode use
 };
 
-enum PageIteratorLevel { 
-  "RIL_BLOCK", 
-  "RIL_PARA", 
-  "RIL_TEXTLINE", 
-  "RIL_WORD", 
+enum PageIteratorLevel {
+  "RIL_BLOCK",
+  "RIL_PARA",
+  "RIL_TEXTLINE",
+  "RIL_WORD",
   "RIL_SYMBOL"
 };
 
@@ -1459,11 +1436,11 @@ enum TextlineOrder_ {
 interface ParagraphJustification {
 };
 
-enum ParagraphJustification_ { 
-  "JUSTIFICATION_UNKNOWN", 
-  "JUSTIFICATION_LEFT", 
-  "JUSTIFICATION_CENTER", 
-  "JUSTIFICATION_RIGHT" 
+enum ParagraphJustification_ {
+  "JUSTIFICATION_UNKNOWN",
+  "JUSTIFICATION_LEFT",
+  "JUSTIFICATION_CENTER",
+  "JUSTIFICATION_RIGHT"
 };
 
 

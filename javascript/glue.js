@@ -1226,11 +1226,6 @@ TessBaseAPI.prototype['Version'] = TessBaseAPI.prototype.Version = /** @suppress
   return UTF8ToString(_emscripten_bind_TessBaseAPI_Version_0(self));
 };;
 
-TessBaseAPI.prototype['CatchSignals'] = TessBaseAPI.prototype.CatchSignals = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  _emscripten_bind_TessBaseAPI_CatchSignals_0(self);
-};;
-
 TessBaseAPI.prototype['SetInputName'] = TessBaseAPI.prototype.SetInputName = /** @suppress {undefinedVars, duplicate} */function(name) {
   var self = this.ptr;
   ensureCache.prepare();
@@ -1328,11 +1323,6 @@ TessBaseAPI.prototype['GetStringVariable'] = TessBaseAPI.prototype.GetStringVari
   return UTF8ToString(_emscripten_bind_TessBaseAPI_GetStringVariable_1(self, name));
 };;
 
-TessBaseAPI.prototype['PrintVariables'] = TessBaseAPI.prototype.PrintVariables = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  _emscripten_bind_TessBaseAPI_PrintVariables_0(self);
-};;
-
 TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem) {
   var self = this.ptr;
   ensureCache.prepare();
@@ -1348,16 +1338,6 @@ TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {unde
 TessBaseAPI.prototype['GetInitLanguagesAsString'] = TessBaseAPI.prototype.GetInitLanguagesAsString = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   return UTF8ToString(_emscripten_bind_TessBaseAPI_GetInitLanguagesAsString_0(self));
-};;
-
-TessBaseAPI.prototype['InitLangMod'] = TessBaseAPI.prototype.InitLangMod = /** @suppress {undefinedVars, duplicate} */function(datapath, language) {
-  var self = this.ptr;
-  ensureCache.prepare();
-  if (datapath && typeof datapath === 'object') datapath = datapath.ptr;
-  else datapath = ensureString(datapath);
-  if (language && typeof language === 'object') language = language.ptr;
-  else language = ensureString(language);
-  return _emscripten_bind_TessBaseAPI_InitLangMod_2(self, datapath, language);
 };;
 
 TessBaseAPI.prototype['InitForAnalysePage'] = TessBaseAPI.prototype.InitForAnalysePage = /** @suppress {undefinedVars, duplicate} */function() {
@@ -1512,12 +1492,6 @@ TessBaseAPI.prototype['Recognize'] = TessBaseAPI.prototype.Recognize = /** @supp
   var self = this.ptr;
   if (monitor && typeof monitor === 'object') monitor = monitor.ptr;
   return _emscripten_bind_TessBaseAPI_Recognize_1(self, monitor);
-};;
-
-TessBaseAPI.prototype['RecognizeForChopTest'] = TessBaseAPI.prototype.RecognizeForChopTest = /** @suppress {undefinedVars, duplicate} */function(monitor) {
-  var self = this.ptr;
-  if (monitor && typeof monitor === 'object') monitor = monitor.ptr;
-  return _emscripten_bind_TessBaseAPI_RecognizeForChopTest_1(self, monitor);
 };;
 
 TessBaseAPI.prototype['ProcessPages'] = TessBaseAPI.prototype.ProcessPages = /** @suppress {undefinedVars, duplicate} */function(filename, retry_config, timeout_millisec, renderer) {
@@ -1736,7 +1710,7 @@ Module['Pixa'] = Pixa;
 };
 (function() {
   function setupEnums() {
-    
+
 
     // PageIteratorLevel
 
@@ -1750,7 +1724,7 @@ Module['Pixa'] = Pixa;
 
     Module['RIL_SYMBOL'] = _emscripten_enum_PageIteratorLevel_RIL_SYMBOL();
 
-    
+
 
     // OcrEngineMode
 
@@ -1764,7 +1738,7 @@ Module['Pixa'] = Pixa;
 
     Module['OEM_COUNT'] = _emscripten_enum_OcrEngineMode_OEM_COUNT();
 
-    
+
 
     // WritingDirection_
 
@@ -1774,7 +1748,7 @@ Module['Pixa'] = Pixa;
 
     Module['WRITING_DIRECTION_TOP_TO_BOTTOM'] = _emscripten_enum_WritingDirection__WRITING_DIRECTION_TOP_TO_BOTTOM();
 
-    
+
 
     // PolyBlockType
 
@@ -1810,7 +1784,7 @@ Module['Pixa'] = Pixa;
 
     Module['PT_COUNT'] = _emscripten_enum_PolyBlockType_PT_COUNT();
 
-    
+
 
     // StrongScriptDirection
 
@@ -1822,7 +1796,7 @@ Module['Pixa'] = Pixa;
 
     Module['DIR_MIX'] = _emscripten_enum_StrongScriptDirection_DIR_MIX();
 
-    
+
 
     // ParagraphJustification_
 
@@ -1834,7 +1808,7 @@ Module['Pixa'] = Pixa;
 
     Module['JUSTIFICATION_RIGHT'] = _emscripten_enum_ParagraphJustification__JUSTIFICATION_RIGHT();
 
-    
+
 
     // TextlineOrder_
 
@@ -1844,7 +1818,7 @@ Module['Pixa'] = Pixa;
 
     Module['TEXTLINE_ORDER_TOP_TO_BOTTOM'] = _emscripten_enum_TextlineOrder__TEXTLINE_ORDER_TOP_TO_BOTTOM();
 
-    
+
 
     // Orientation_
 
@@ -1856,7 +1830,7 @@ Module['Pixa'] = Pixa;
 
     Module['ORIENTATION_PAGE_LEFT'] = _emscripten_enum_Orientation__ORIENTATION_PAGE_LEFT();
 
-    
+
 
     // PageSegMode
 
@@ -1892,5 +1866,5 @@ Module['Pixa'] = Pixa;
 
   }
   if (runtimeInitialized) setupEnums();
-  else addOnPreMain(setupEnums);
+  else addOnInit(setupEnums);
 })();
