@@ -5,15 +5,16 @@ tesseract.js-core
 
 Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compiles original tesseract from C to JavaScript WebAssembly.
 
-## Environment
 
-- Emscripten: 1.39.10 (trzeci/emscripten:1.39.10-upstream)
-- Leptonica: 1.74.2
-  - zlib: 1.2.5
-  - libtiff: 3.9.4
-  - libjpeg: 8.4.0
-  - libpng: 1.4.22
-- Tesseract: 4.1.1
+## Structure
+
+1.	Build scripts are in `build-scripts` folder
+2.	Javascript/wrapper files are in `javascript` folder
+3.	All dependencies (including Tesseract) are in `third_party` folder
+    1. All dependencies are unmodified except for Tesseract, which uses a forked repo
+    1. The Tesseract repo has the following changes:
+       1. Modified `CMakeLists.txt` to build with emscripten
+       1. Modified `ltrresultiterator.h` and `ltrresultiterator.cpp` to add `WordChoiceIterator` class
 
 ## Contribution
 
