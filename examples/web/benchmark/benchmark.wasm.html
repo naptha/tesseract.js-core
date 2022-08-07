@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../../tesseract-core.wasm.js"></script>
+    <script>
+
+      TesseractCoreWASM().then((TessModule) => {
+        const api = new TessModule.TessBaseAPI();
+        const lang = 'eng';
+
+        fetch(`../../../tests/traineddata/${lang}.traineddata`)
+          .then(resp => resp.arrayBuffer())
+          .then(buf => {
+            TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
+            return fetch('../../data/tyger.jpg');
+          })
+          .then(async resp => {
+            const image = new Uint8Array(await resp.arrayBuffer());
+
+            const buf = image;
+
+            const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
+            TessModule.HEAPU8.set(buf, ptr);
+            pix = TessModule._pixReadMem(ptr, buf.length);
+
+            const messageDiv = document.getElementById('message');
+
+            api.Init(null, lang);
+            
+            let time1 = Date.now();
+            for (let i=0; i < 10; i++) {
+                api.SetImage(pix);
+                api.GetUTF8Text();
+            }
+            let time2 = Date.now();
+            messageDiv.innerHTML = "GetUTF8Text runtime: " + (time2 - time1) / 1e3 + "s";
+            api.End();
+            TessModule.destroy(api);
+            TessModule._free(ptr);
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <textarea id="message">Working...</textarea>
+  </body>
+</html>

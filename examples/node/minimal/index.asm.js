@@ -1,5 +1,5 @@
 const fs = require('fs');
-const TesseractCore = require('../../../src/tesseract-core.asm');
+const TesseractCore = require('../../../tesseract-core.asm');
 const { width, height, data } = require('../../data/test-image.json');
 
 TesseractCore().then((TessModule) => {
