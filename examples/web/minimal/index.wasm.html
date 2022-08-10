@@ -1,10 +1,10 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <script src="../../../src/tesseract-core.js"></script>
+    <script src="../../../tesseract-core.wasm.js"></script>
     <script>
 
-      TesseractCore().then((TessModule) => {
+      TesseractCoreWASM().then((TessModule) => {
         const api = new TessModule.TessBaseAPI();
         const lang = 'eng';
 

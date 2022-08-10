@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../../../tesseract-core.wasm.js"></script>
+    <script>
+
+      TesseractCoreWASM().then((TessModule) => {
+        const api = new TessModule.TessBaseAPI();
+        const lang = 'eng';
+
+        fetch(`../../../tests/traineddata/${lang}.traineddata`)
+          .then(resp => resp.arrayBuffer())
+          .then(buf => {
+            TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
+          })
+          .then(async () => {
+
+            const messageDiv = document.getElementById('message');
+
+            api.Init(null, lang);
+
+            const fileArr = ['../../data/meditations.jpg', '../../data/tyger.jpg', '../../data/testocr.png'];
+            let timeTotal = 0;
+            for (const file of fileArr) {
+                const resp = await fetch(file);
+                const image = new Uint8Array(await resp.arrayBuffer());
+                const buf = image;
+                const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
+                TessModule.HEAPU8.set(buf, ptr);
+                const pix = TessModule._pixReadMem(ptr, buf.length);
+
+                let time1 = Date.now();
+                for (let i=0; i<10; i++) {
+                    api.SetImage(pix);
+                    api.GetUTF8Text();
+                }
+                let time2 = Date.now();
+                const timeDif = (time2 - time1) / 1e3;
+                timeTotal += timeDif;
+
+                messageDiv.innerHTML += "\n" + file + " [x10] runtime: " + (time2 - time1) / 1e3 + "s";
+                TessModule._free(pix);
+            }
+
+            messageDiv.innerHTML += "\nTotal runtime: " + timeTotal + "s";
+
+            api.End();
+            TessModule.destroy(api);
+        })});
+    </script>
+  </head>
+  <body>
+    <textarea id="message">Working...</textarea>
+  </body>
+</html>

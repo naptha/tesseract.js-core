@@ -5,15 +5,26 @@ tesseract.js-core
 
 Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compiles original tesseract from C to JavaScript WebAssembly.
 
-## Environment
 
-- Emscripten: 1.39.10 (trzeci/emscripten:1.39.10-upstream)
-- Leptonica: 1.74.2
-  - zlib: 1.2.5
-  - libtiff: 3.9.4
-  - libjpeg: 8.4.0
-  - libpng: 1.4.22
-- Tesseract: 4.1.1
+## Structure
+
+1.	Build scripts are in `build-scripts` folder
+2.	Javascript/wrapper files are in `javascript` folder
+3.	All dependencies (including Tesseract) are in `third_party` folder
+    1. All dependencies are unmodified except for Tesseract, which uses a forked repo
+    1. The Tesseract repo has the following changes:
+       1. Modified `CMakeLists.txt` to build with emscripten
+       1. Modified `ltrresultiterator.h` and `ltrresultiterator.cpp` to add `WordChoiceIterator` class
+       1. Added `src/arch_see` folder, which is used instead of `src/arch` for the simd-enabled build
+          1. This hard-codes the use of the SSE function
+       1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
+
+## Running Minimal Examples
+To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
+
+To run the node examples, navigate to `examples/node/minimal/` and then run e.g. `node index.wasm.js`.
+
+The "benchmark" examples behave similarly, except that they take longer to run and report runtime instead of recognition text.  All other examples are experimental and should not be expected to run. 
 
 ## Contribution
 
@@ -26,7 +37,7 @@ $ git clone --recursive https://github.com/naptha/tesseract.js-core
 To build tesseract-core.js by yourself, please install [docker](https://www.docker.com/) and run:
 
 ```
-$ sh build.sh
+$ bash build-with-docker.sh
 ```
 
 The genreated files will be stored in root path.
