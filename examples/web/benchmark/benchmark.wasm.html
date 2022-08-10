@@ -12,33 +12,41 @@
           .then(resp => resp.arrayBuffer())
           .then(buf => {
             TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
-            return fetch('../../data/tyger.jpg');
           })
-          .then(async resp => {
-            const image = new Uint8Array(await resp.arrayBuffer());
-
-            const buf = image;
-
-            const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
-            TessModule.HEAPU8.set(buf, ptr);
-            pix = TessModule._pixReadMem(ptr, buf.length);
+          .then(async () => {
 
             const messageDiv = document.getElementById('message');
 
             api.Init(null, lang);
-            
-            let time1 = Date.now();
-            for (let i=0; i < 10; i++) {
-                api.SetImage(pix);
-                api.GetUTF8Text();
+
+            const fileArr = ['../../data/meditations.jpg', '../../data/tyger.jpg', '../../data/testocr.png'];
+            let timeTotal = 0;
+            for (const file of fileArr) {
+                const resp = await fetch(file);
+                const image = new Uint8Array(await resp.arrayBuffer());
+                const buf = image;
+                const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
+                TessModule.HEAPU8.set(buf, ptr);
+                const pix = TessModule._pixReadMem(ptr, buf.length);
+
+                let time1 = Date.now();
+                for (let i=0; i<10; i++) {
+                    api.SetImage(pix);
+                    api.GetUTF8Text();
+                }
+                let time2 = Date.now();
+                const timeDif = (time2 - time1) / 1e3;
+                timeTotal += timeDif;
+
+                messageDiv.innerHTML += "\n" + file + " [x10] runtime: " + (time2 - time1) / 1e3 + "s";
+                TessModule._free(pix);
             }
-            let time2 = Date.now();
-            messageDiv.innerHTML = "GetUTF8Text runtime: " + (time2 - time1) / 1e3 + "s";
+
+            messageDiv.innerHTML += "\nTotal runtime: " + timeTotal + "s";
+
             api.End();
             TessModule.destroy(api);
-            TessModule._free(ptr);
-          });
-      });
+        })});
     </script>
   </head>
   <body>
