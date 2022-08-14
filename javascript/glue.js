@@ -1389,18 +1389,15 @@ TessBaseAPI.prototype['ClearAdaptiveClassifier'] = TessBaseAPI.prototype.ClearAd
   _emscripten_bind_TessBaseAPI_ClearAdaptiveClassifier_0(self);
 };;
 
-TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line) {
+TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif) {
   var self = this.ptr;
   if (imagedata && typeof imagedata === 'object') imagedata = imagedata.ptr;
   if (width && typeof width === 'object') width = width.ptr;
   if (height && typeof height === 'object') height = height.ptr;
   if (bytes_per_pixel && typeof bytes_per_pixel === 'object') bytes_per_pixel = bytes_per_pixel.ptr;
   if (bytes_per_line && typeof bytes_per_line === 'object') bytes_per_line = bytes_per_line.ptr;
-  if (width === undefined) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata);  return }
-  if (height === undefined) { _emscripten_bind_TessBaseAPI_SetImage_2(self, imagedata, width);  return }
-  if (bytes_per_pixel === undefined) { _emscripten_bind_TessBaseAPI_SetImage_3(self, imagedata, width, height);  return }
-  if (bytes_per_line === undefined) { _emscripten_bind_TessBaseAPI_SetImage_4(self, imagedata, width, height, bytes_per_pixel);  return }
-  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line);
+  if (width === undefined || width === null) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata, exif);  return }
+  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif);
 };;
 
 TessBaseAPI.prototype['SetSourceResolution'] = TessBaseAPI.prototype.SetSourceResolution = /** @suppress {undefinedVars, duplicate} */function(ppi) {

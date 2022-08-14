@@ -766,12 +766,12 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_ClearAdaptiveClassifier_0(
   self->ClearAdaptiveClassifier();
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_1(TessBaseAPI* self, Pix* imagedata) {
-  self->SetImage(imagedata);
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_1(TessBaseAPI* self, Pix* imagedata, int exif) {
+  self->SetImage(imagedata, exif);
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_5(TessBaseAPI* self, const Uint8Array imagedata, int width, int height, int bytes_per_pixel, int bytes_per_line) {
-  self->SetImage(imagedata, width, height, bytes_per_pixel, bytes_per_line);
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_5(TessBaseAPI* self, const Uint8Array imagedata, int width, int height, int bytes_per_pixel, int bytes_per_line, int exif) {
+  self->SetImage(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif);
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetSourceResolution_1(TessBaseAPI* self, int ppi) {
