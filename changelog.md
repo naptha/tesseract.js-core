@@ -10,4 +10,5 @@ Version 3.0.0 changes provide (1) a significant improvement in performance and (
 - Updated emscripten version for compatibility with Node.js 18
 - Refactored build scripts
 - Added benchmark examples
-
+- Added argument to rotate image based on exif orientation tag
+   - Orientation must be specified (not detected automatically)
