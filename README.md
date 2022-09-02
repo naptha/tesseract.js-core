@@ -18,6 +18,7 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
        1. Added `src/arch_see` folder, which is used instead of `src/arch` for the simd-enabled build
           1. This hard-codes the use of the SSE function
        1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
+       1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
 
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
