@@ -14,8 +14,11 @@ CM_FLAGS=(
 echo "CM_FLAGS=${CM_FLAGS[@]}"
 
 cd $LIB_PATH
-rm -rf build
-mkdir -p build
+if [ $BUILD_CLEAN = 1 ]
+then
+  rm -rf build
+  mkdir -p build
+fi
 cd build
 emmake cmake .. -DCMAKE_CXX_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 emmake make
