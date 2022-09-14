@@ -15,4 +15,4 @@ if [ $BUILD_CLEAN = 1 ]
 then
   emmake make -C $LIB_PATH clean
 fi
-emmake make -C $LIB_PATH install
+emmake make -C $LIB_PATH install -j$PROC

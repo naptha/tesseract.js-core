@@ -1,6 +1,4 @@
 #!/bin/bash
-NPROC=$(($(cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l)-1))
-
 set -euo pipefail
 source $(dirname $0)/var.sh
 
@@ -20,9 +18,7 @@ then
   mkdir -p build
 fi
 cd build
-emmake cmake .. -DCMAKE_CXX_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
-emmake make
 emmake cmake .. -DCMAKE_CXX_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]} -D HAVE_SSE4_1=1 
-emmake make -j${NPROC}
+emmake make -j${PROC}
 emmake cmake .. -DCMAKE_CXX_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]} -D HAVE_SSE4_1=0 
-emmake make -j${NPROC}
+emmake make -j${PROC}

@@ -25,5 +25,5 @@ if [ $BUILD_CLEAN = 1 ]
 then
   emmake make clean
 fi
-emmake make install
+emmake make install -j${PROC}
 cd $ROOT_DIR

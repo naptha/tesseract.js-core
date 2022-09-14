@@ -34,5 +34,5 @@ then
 fi
 cd build
 emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
-emmake make install
+emmake make install -j$PROC
 cd $ROOT_DIR
