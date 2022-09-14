@@ -766,12 +766,12 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_ClearAdaptiveClassifier_0(
   self->ClearAdaptiveClassifier();
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_1(TessBaseAPI* self, Pix* imagedata, int exif) {
-  self->SetImage(imagedata, exif);
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_1(TessBaseAPI* self, Pix* imagedata, int exif, const float angle) {
+  self->SetImage(imagedata, exif, angle);
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_5(TessBaseAPI* self, const Uint8Array imagedata, int width, int height, int bytes_per_pixel, int bytes_per_line, int exif) {
-  self->SetImage(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif);
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_5(TessBaseAPI* self, const Uint8Array imagedata, int width, int height, int bytes_per_pixel, int bytes_per_line, int exif, const float angle) {
+  self->SetImage(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif, angle);
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetSourceResolution_1(TessBaseAPI* self, int ppi) {
@@ -784,6 +784,18 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetRectangle_4(TessBaseAPI
 
 Pix* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetThresholdedImage_0(TessBaseAPI* self) {
   return self->GetThresholdedImage();
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_WriteImage_0(TessBaseAPI* self, const int type) {
+  return self->WriteImage(type);
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_FindLines_0(TessBaseAPI* self) {
+  return self->FindLines();
+}
+
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetAngle_0(TessBaseAPI* self) {
+  return self->GetAngle();
 }
 
 Boxa* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetRegions_1(TessBaseAPI* self, PixaPtr* pixa) {

@@ -1389,15 +1389,15 @@ TessBaseAPI.prototype['ClearAdaptiveClassifier'] = TessBaseAPI.prototype.ClearAd
   _emscripten_bind_TessBaseAPI_ClearAdaptiveClassifier_0(self);
 };;
 
-TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif) {
+TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif = 1, angle = 0) {
   var self = this.ptr;
   if (imagedata && typeof imagedata === 'object') imagedata = imagedata.ptr;
   if (width && typeof width === 'object') width = width.ptr;
   if (height && typeof height === 'object') height = height.ptr;
   if (bytes_per_pixel && typeof bytes_per_pixel === 'object') bytes_per_pixel = bytes_per_pixel.ptr;
   if (bytes_per_line && typeof bytes_per_line === 'object') bytes_per_line = bytes_per_line.ptr;
-  if (width === undefined || width === null) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata, exif);  return }
-  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif);
+  if (width === undefined || width === null) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata, exif, angle);  return }
+  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif, angle);
 };;
 
 TessBaseAPI.prototype['SetSourceResolution'] = TessBaseAPI.prototype.SetSourceResolution = /** @suppress {undefinedVars, duplicate} */function(ppi) {
@@ -1418,6 +1418,11 @@ TessBaseAPI.prototype['SetRectangle'] = TessBaseAPI.prototype.SetRectangle = /**
 TessBaseAPI.prototype['GetThresholdedImage'] = TessBaseAPI.prototype.GetThresholdedImage = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   return wrapPointer(_emscripten_bind_TessBaseAPI_GetThresholdedImage_0(self), Pix);
+};;
+
+TessBaseAPI.prototype['WriteImage'] = TessBaseAPI.prototype.WriteImage = /** @suppress {undefinedVars, duplicate} */function(type) {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_WriteImage_0(self, type);
 };;
 
 TessBaseAPI.prototype['GetRegions'] = TessBaseAPI.prototype.GetRegions = /** @suppress {undefinedVars, duplicate} */function(pixa) {
@@ -1489,6 +1494,16 @@ TessBaseAPI.prototype['Recognize'] = TessBaseAPI.prototype.Recognize = /** @supp
   var self = this.ptr;
   if (monitor && typeof monitor === 'object') monitor = monitor.ptr;
   return _emscripten_bind_TessBaseAPI_Recognize_1(self, monitor);
+};;
+
+TessBaseAPI.prototype['FindLines'] = TessBaseAPI.prototype.FindLines = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessBaseAPI_FindLines_0(self);
+};;
+
+TessBaseAPI.prototype['GetAngle'] = TessBaseAPI.prototype.GetAngle = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessBaseAPI_GetAngle_0(self);
 };;
 
 TessBaseAPI.prototype['ProcessPages'] = TessBaseAPI.prototype.ProcessPages = /** @suppress {undefinedVars, duplicate} */function(filename, retry_config, timeout_millisec, renderer) {

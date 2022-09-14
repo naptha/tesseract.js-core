@@ -18,7 +18,12 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
        1. Added `src/arch_see` folder, which is used instead of `src/arch` for the simd-enabled build
           1. This hard-codes the use of the SSE function
        1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
-       1. Modified `src/ccmain/thresholder.cpp`, `src/ccmain/thresholder.h`, `src/api/baseapi.cpp`, and `include/tesseract/baseapi.h` to add option for rotating images using exif orientation tag
+       1. Added functions for detecting page angle and applying rotation
+          1. Modified `src/ccmain/thresholder.cpp`, `src/ccmain/thresholder.h`, `src/api/baseapi.cpp`, and `include/tesseract/baseapi.h` to add `exif` and `angle` arguments for rotating images
+          1. Changed `FindLines` from "protected" to "public" in `baseapi.h` to expose to Javascript
+             1. Allows for lines (and therefore page angle) to be detected without running unnecessary steps afterwards
+          1. Added public `GetAngle` function to `baseapi.h` and `baseapi.cpp` for reporting page angle
+       1. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
        1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
 
 ## Running Minimal Examples
