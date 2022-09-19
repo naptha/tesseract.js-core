@@ -24,6 +24,7 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
              1. Allows for lines (and therefore page angle) to be detected without running unnecessary steps afterwards
           1. Added public `GetAngle` function to `baseapi.h` and `baseapi.cpp` for reporting page angle
        1. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
+       1. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
        1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
 
 ## Running Minimal Examples

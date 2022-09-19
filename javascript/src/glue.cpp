@@ -726,6 +726,14 @@ const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetStringVariable_1
   return self->GetStringVariable(name);
 }
 
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SaveParameters_1(TessBaseAPI* self) {
+  return self->SaveParameters();
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_RestoreParameters_1(TessBaseAPI* self) {
+  return self->RestoreParameters();
+}
+
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Init_2(TessBaseAPI* self, const char* datapath, const char* language) {
   return self->Init(datapath, language);
 }

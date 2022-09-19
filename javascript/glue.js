@@ -1345,6 +1345,16 @@ TessBaseAPI.prototype['InitForAnalysePage'] = TessBaseAPI.prototype.InitForAnaly
   _emscripten_bind_TessBaseAPI_InitForAnalysePage_0(self);
 };;
 
+TessBaseAPI.prototype['SaveParameters'] = TessBaseAPI.prototype.SaveParameters = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_SaveParameters_1(self);
+};;
+
+TessBaseAPI.prototype['RestoreParameters'] = TessBaseAPI.prototype.RestoreParameters = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_RestoreParameters_1(self);
+};;
+
 TessBaseAPI.prototype['ReadConfigFile'] = TessBaseAPI.prototype.ReadConfigFile = /** @suppress {undefinedVars, duplicate} */function(filename) {
   var self = this.ptr;
   ensureCache.prepare();
