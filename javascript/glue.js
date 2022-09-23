@@ -1323,16 +1323,25 @@ TessBaseAPI.prototype['GetStringVariable'] = TessBaseAPI.prototype.GetStringVari
   return UTF8ToString(_emscripten_bind_TessBaseAPI_GetStringVariable_1(self, name));
 };;
 
-TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem) {
+TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem, configFilename) {
+
+  
+  if (oem === undefined && configFilename !== undefined) oem = 3;
+
   var self = this.ptr;
   ensureCache.prepare();
   if (datapath && typeof datapath === 'object') datapath = datapath.ptr;
   else datapath = ensureString(datapath);
   if (language && typeof language === 'object') language = language.ptr;
   else language = ensureString(language);
+  if (configFilename && typeof configFilename === 'object') configFilename = configFilename.ptr;
+  else configFilename = ensureString(configFilename);
   if (oem && typeof oem === 'object') oem = oem.ptr;
-  if (oem === undefined) { return _emscripten_bind_TessBaseAPI_Init_2(self, datapath, language) }
-  return _emscripten_bind_TessBaseAPI_Init_3(self, datapath, language, oem);
+  // OEM 3 (OEM_DEFAULT) is the default
+  if (oem === undefined && configFilename !== undefined) {return _emscripten_bind_TessBaseAPI_Init_4(self, datapath, language, 3, configFilename)}
+  if (oem === undefined) { return _emscripten_bind_TessBaseAPI_Init_2(self, datapath, language) };
+  if (configFilename === undefined) {return _emscripten_bind_TessBaseAPI_Init_3(self, datapath, language, oem)};
+  return _emscripten_bind_TessBaseAPI_Init_4(self, datapath, language, oem, configFilename);
 };;
 
 TessBaseAPI.prototype['GetInitLanguagesAsString'] = TessBaseAPI.prototype.GetInitLanguagesAsString = /** @suppress {undefinedVars, duplicate} */function() {

@@ -742,6 +742,11 @@ int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Init_3(TessBaseAPI* self, c
   return self->Init(datapath, language, oem);
 }
 
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Init_4(TessBaseAPI* self, const char* datapath, const char* language, OcrEngineMode oem, char* config) {
+  char *configs[64] = {config};
+  return self->Init(datapath, language, oem, configs, 1, nullptr, nullptr, false);
+}
+
 const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetInitLanguagesAsString_0(TessBaseAPI* self) {
   return self->GetInitLanguagesAsString();
 }
