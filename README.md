@@ -26,6 +26,7 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
        1. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
        1. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
        1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
+       2. Rewrote `tprintf` function in `src/ccutil/tprintf.cpp` to force flushing
 
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
@@ -48,4 +49,4 @@ To build tesseract-core.js by yourself, please install [docker](https://www.dock
 $ bash build-with-docker.sh
 ```
 
-The genreated files will be stored in root path.
+The generated files will be stored in root path.
