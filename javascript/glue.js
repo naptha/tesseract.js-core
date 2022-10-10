@@ -1419,6 +1419,11 @@ TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppre
   _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif, angle);
 };;
 
+TessBaseAPI.prototype['SetImageFile'] = TessBaseAPI.prototype.SetImageFile = /** @suppress {undefinedVars, duplicate} */function(exif = 1, angle = 0){
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_SetImage_6(self, exif, angle);
+}
+
 TessBaseAPI.prototype['SetSourceResolution'] = TessBaseAPI.prototype.SetSourceResolution = /** @suppress {undefinedVars, duplicate} */function(ppi) {
   var self = this.ptr;
   if (ppi && typeof ppi === 'object') ppi = ppi.ptr;

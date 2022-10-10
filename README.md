@@ -27,6 +27,8 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
        1. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
        1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
        2. Rewrote `tprintf` function in `src/ccutil/tprintf.cpp` to force flushing
+       3. Added new version of `SetImage` to `src/api/baseapi.cpp` and `include/tesseract/baseapi.h` that reads image from filesystem
+          1. This was done to resolve memory leak--see [this issue](https://github.com/naptha/tesseract.js/issues/678)
 
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
