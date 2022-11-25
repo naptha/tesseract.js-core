@@ -8,4 +8,4 @@ if [ $BUILD_CLEAN = 1 ]
 then
   emmake make -C $LIB_PATH clean
 fi
-emmake make -C $LIB_PATH prefix=$BUILD_DIR install
+emmake make -C $LIB_PATH prefix=$BUILD_DIR install -j$PROC

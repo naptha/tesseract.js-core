@@ -20,13 +20,13 @@ cd $LIB_PATH
 if [ $BUILD_CLEAN = 1 ]
 then
   rm -rf build
-  mkdir -p build
 fi
+mkdir -p build
 cd build
 emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 if [ $BUILD_CLEAN = 1 ]
 then
   emmake make clean
 fi
-emmake make install
+emmake make install -j$PROC
 cd $ROOT_DIR

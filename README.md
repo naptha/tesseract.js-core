@@ -18,8 +18,19 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
        1. Added `src/arch_see` folder, which is used instead of `src/arch` for the simd-enabled build
           1. This hard-codes the use of the SSE function
        1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
-       1. Modified `src/ccmain/thresholder.cpp`, `src/ccmain/thresholder.h`, `src/api/baseapi.cpp`, and `include/tesseract/baseapi.h` to add option for rotating images using exif orientation tag
+       1. Added functions for detecting page angle and applying rotation
+          1. Modified `src/ccmain/thresholder.cpp`, `src/ccmain/thresholder.h`, `src/api/baseapi.cpp`, and `include/tesseract/baseapi.h` to add `exif` and `angle` arguments for rotating images
+          1. Changed `FindLines` from "protected" to "public" in `baseapi.h` to expose to Javascript
+             1. Allows for lines (and therefore page angle) to be detected without running unnecessary steps afterwards
+          1. Added public `GetAngle` function to `baseapi.h` and `baseapi.cpp` for reporting page angle
+       1. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
+       1. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
        1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
+       2. Rewrote `tprintf` function in `src/ccutil/tprintf.cpp` to force flushing
+       3. Added new version of `SetImage` to `src/api/baseapi.cpp` and `include/tesseract/baseapi.h` that reads image from filesystem
+          1. This was done to resolve memory leak--see [this issue](https://github.com/naptha/tesseract.js/issues/678)
+       4. Edited `ParamUtils::PrintParams` in `src/ccutil/params.cpp` to remove description text (resolves bug)
+          1. The bug was reported in [this](https://github.com/tesseract-ocr/tesseract/issues/3943) Git Issue, so we can cut this point if resolved in a future version of Tesseract
 
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
@@ -42,4 +53,4 @@ To build tesseract-core.js by yourself, please install [docker](https://www.dock
 $ bash build-with-docker.sh
 ```
 
-The genreated files will be stored in root path.
+The generated files will be stored in root path.

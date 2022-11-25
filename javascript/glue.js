@@ -1323,16 +1323,25 @@ TessBaseAPI.prototype['GetStringVariable'] = TessBaseAPI.prototype.GetStringVari
   return UTF8ToString(_emscripten_bind_TessBaseAPI_GetStringVariable_1(self, name));
 };;
 
-TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem) {
+TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem, configFilename) {
+
+  
+  if (oem === undefined && configFilename !== undefined) oem = 3;
+
   var self = this.ptr;
   ensureCache.prepare();
   if (datapath && typeof datapath === 'object') datapath = datapath.ptr;
   else datapath = ensureString(datapath);
   if (language && typeof language === 'object') language = language.ptr;
   else language = ensureString(language);
+  if (configFilename && typeof configFilename === 'object') configFilename = configFilename.ptr;
+  else configFilename = ensureString(configFilename);
   if (oem && typeof oem === 'object') oem = oem.ptr;
-  if (oem === undefined) { return _emscripten_bind_TessBaseAPI_Init_2(self, datapath, language) }
-  return _emscripten_bind_TessBaseAPI_Init_3(self, datapath, language, oem);
+  // OEM 3 (OEM_DEFAULT) is the default
+  if (oem === undefined && configFilename !== undefined) {return _emscripten_bind_TessBaseAPI_Init_4(self, datapath, language, 3, configFilename)}
+  if (oem === undefined) { return _emscripten_bind_TessBaseAPI_Init_2(self, datapath, language) };
+  if (configFilename === undefined) {return _emscripten_bind_TessBaseAPI_Init_3(self, datapath, language, oem)};
+  return _emscripten_bind_TessBaseAPI_Init_4(self, datapath, language, oem, configFilename);
 };;
 
 TessBaseAPI.prototype['GetInitLanguagesAsString'] = TessBaseAPI.prototype.GetInitLanguagesAsString = /** @suppress {undefinedVars, duplicate} */function() {
@@ -1343,6 +1352,16 @@ TessBaseAPI.prototype['GetInitLanguagesAsString'] = TessBaseAPI.prototype.GetIni
 TessBaseAPI.prototype['InitForAnalysePage'] = TessBaseAPI.prototype.InitForAnalysePage = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_TessBaseAPI_InitForAnalysePage_0(self);
+};;
+
+TessBaseAPI.prototype['SaveParameters'] = TessBaseAPI.prototype.SaveParameters = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_SaveParameters_1(self);
+};;
+
+TessBaseAPI.prototype['RestoreParameters'] = TessBaseAPI.prototype.RestoreParameters = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_RestoreParameters_1(self);
 };;
 
 TessBaseAPI.prototype['ReadConfigFile'] = TessBaseAPI.prototype.ReadConfigFile = /** @suppress {undefinedVars, duplicate} */function(filename) {
@@ -1389,16 +1408,21 @@ TessBaseAPI.prototype['ClearAdaptiveClassifier'] = TessBaseAPI.prototype.ClearAd
   _emscripten_bind_TessBaseAPI_ClearAdaptiveClassifier_0(self);
 };;
 
-TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif) {
+TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppress {undefinedVars, duplicate} */function(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif = 1, angle = 0) {
   var self = this.ptr;
   if (imagedata && typeof imagedata === 'object') imagedata = imagedata.ptr;
   if (width && typeof width === 'object') width = width.ptr;
   if (height && typeof height === 'object') height = height.ptr;
   if (bytes_per_pixel && typeof bytes_per_pixel === 'object') bytes_per_pixel = bytes_per_pixel.ptr;
   if (bytes_per_line && typeof bytes_per_line === 'object') bytes_per_line = bytes_per_line.ptr;
-  if (width === undefined || width === null) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata, exif);  return }
-  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif);
+  if (width === undefined || width === null) { _emscripten_bind_TessBaseAPI_SetImage_1(self, imagedata, exif, angle);  return }
+  _emscripten_bind_TessBaseAPI_SetImage_5(self, imagedata, width, height, bytes_per_pixel, bytes_per_line, exif, angle);
 };;
+
+TessBaseAPI.prototype['SetImageFile'] = TessBaseAPI.prototype.SetImageFile = /** @suppress {undefinedVars, duplicate} */function(exif = 1, angle = 0){
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_SetImage_6(self, exif, angle);
+}
 
 TessBaseAPI.prototype['SetSourceResolution'] = TessBaseAPI.prototype.SetSourceResolution = /** @suppress {undefinedVars, duplicate} */function(ppi) {
   var self = this.ptr;
@@ -1418,6 +1442,11 @@ TessBaseAPI.prototype['SetRectangle'] = TessBaseAPI.prototype.SetRectangle = /**
 TessBaseAPI.prototype['GetThresholdedImage'] = TessBaseAPI.prototype.GetThresholdedImage = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   return wrapPointer(_emscripten_bind_TessBaseAPI_GetThresholdedImage_0(self), Pix);
+};;
+
+TessBaseAPI.prototype['WriteImage'] = TessBaseAPI.prototype.WriteImage = /** @suppress {undefinedVars, duplicate} */function(type) {
+  var self = this.ptr;
+  _emscripten_bind_TessBaseAPI_WriteImage_0(self, type);
 };;
 
 TessBaseAPI.prototype['GetRegions'] = TessBaseAPI.prototype.GetRegions = /** @suppress {undefinedVars, duplicate} */function(pixa) {
@@ -1489,6 +1518,16 @@ TessBaseAPI.prototype['Recognize'] = TessBaseAPI.prototype.Recognize = /** @supp
   var self = this.ptr;
   if (monitor && typeof monitor === 'object') monitor = monitor.ptr;
   return _emscripten_bind_TessBaseAPI_Recognize_1(self, monitor);
+};;
+
+TessBaseAPI.prototype['FindLines'] = TessBaseAPI.prototype.FindLines = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessBaseAPI_FindLines_0(self);
+};;
+
+TessBaseAPI.prototype['GetAngle'] = TessBaseAPI.prototype.GetAngle = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessBaseAPI_GetAngle_0(self);
 };;
 
 TessBaseAPI.prototype['ProcessPages'] = TessBaseAPI.prototype.ProcessPages = /** @suppress {undefinedVars, duplicate} */function(filename, retry_config, timeout_millisec, renderer) {
