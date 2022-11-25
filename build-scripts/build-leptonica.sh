@@ -30,8 +30,8 @@ cd $LIB_PATH
 if [ $BUILD_CLEAN = 1 ]
 then
   rm -rf build
-  mkdir -p build
 fi
+mkdir -p build
 cd build
 emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 emmake make install -j$PROC

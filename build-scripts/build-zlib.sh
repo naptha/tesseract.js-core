@@ -17,8 +17,8 @@ cd $LIB_PATH
 if [ $BUILD_CLEAN = 1 ]
 then
   rm -rf build zconf.h
-  mkdir -p build
 fi
+mkdir -p build
 cd build
 emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 if [ $BUILD_CLEAN = 1 ]

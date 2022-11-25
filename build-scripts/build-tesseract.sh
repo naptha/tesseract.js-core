@@ -15,8 +15,8 @@ cd $LIB_PATH
 if [ $BUILD_CLEAN = 1 ]
 then
   rm -rf build
-  mkdir -p build
 fi
+mkdir -p build
 cd build
 emmake cmake .. -DCMAKE_CXX_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]} -D HAVE_SSE4_1=1 
 emmake make -j${PROC}
