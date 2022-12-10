@@ -787,8 +787,8 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_5(TessBaseAPI* se
   self->SetImage(imagedata, width, height, bytes_per_pixel, bytes_per_line, exif, angle);
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImage_6(TessBaseAPI* self, int exif, const float angle) {
-  self->SetImage(exif, angle);
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetImageFile_1(TessBaseAPI* self, int exif, const float angle) {
+  return self->SetImageFile(exif, angle);
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_SetSourceResolution_1(TessBaseAPI* self, int ppi) {

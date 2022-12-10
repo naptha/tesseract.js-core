@@ -1421,7 +1421,7 @@ TessBaseAPI.prototype['SetImage'] = TessBaseAPI.prototype.SetImage = /** @suppre
 
 TessBaseAPI.prototype['SetImageFile'] = TessBaseAPI.prototype.SetImageFile = /** @suppress {undefinedVars, duplicate} */function(exif = 1, angle = 0){
   var self = this.ptr;
-  _emscripten_bind_TessBaseAPI_SetImage_6(self, exif, angle);
+  return _emscripten_bind_TessBaseAPI_SetImageFile_1(self, exif, angle);
 }
 
 TessBaseAPI.prototype['SetSourceResolution'] = TessBaseAPI.prototype.SetSourceResolution = /** @suppress {undefinedVars, duplicate} */function(ppi) {
