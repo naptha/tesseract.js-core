@@ -4,7 +4,7 @@
     <script src="../../../tesseract-core-simd.wasm.js"></script>
     <script>
 
-      TesseractCoreWASM().then((TessModule) => {
+      TesseractCore().then((TessModule) => {
         const api = new TessModule.TessBaseAPI();
         const lang = 'eng';
 

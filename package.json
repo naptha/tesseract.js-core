@@ -9,7 +9,6 @@
   },
   "files": [
     "index.js",
-    "tesseract-core.asm.js",
     "tesseract-core.js",
     "tesseract-core.wasm",
     "tesseract-core.wasm.js",
