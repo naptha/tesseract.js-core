@@ -811,8 +811,8 @@ int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_FindLines_0(TessBaseAPI* se
   return self->FindLines();
 }
 
-float EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetAngle_0(TessBaseAPI* self) {
-  return self->GetAngle();
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetGradient_0(TessBaseAPI* self) {
+  return self->GetGradient();
 }
 
 Boxa* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetRegions_1(TessBaseAPI* self, PixaPtr* pixa) {

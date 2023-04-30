@@ -1525,9 +1525,9 @@ TessBaseAPI.prototype['FindLines'] = TessBaseAPI.prototype.FindLines = /** @supp
   return _emscripten_bind_TessBaseAPI_FindLines_0(self);
 };;
 
-TessBaseAPI.prototype['GetAngle'] = TessBaseAPI.prototype.GetAngle = /** @suppress {undefinedVars, duplicate} */function() {
+TessBaseAPI.prototype['GetGradient'] = TessBaseAPI.prototype.GetGradient = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_TessBaseAPI_GetAngle_0(self);
+  return _emscripten_bind_TessBaseAPI_GetGradient_0(self);
 };;
 
 TessBaseAPI.prototype['ProcessPages'] = TessBaseAPI.prototype.ProcessPages = /** @suppress {undefinedVars, duplicate} */function(filename, retry_config, timeout_millisec, renderer) {

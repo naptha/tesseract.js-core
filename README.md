@@ -22,14 +22,16 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
           1. Modified `src/ccmain/thresholder.cpp`, `src/ccmain/thresholder.h`, `src/api/baseapi.cpp`, and `include/tesseract/baseapi.h` to add `exif` and `angle` arguments for rotating images
           1. Changed `FindLines` from "protected" to "public" in `baseapi.h` to expose to Javascript
              1. Allows for lines (and therefore page angle) to be detected without running unnecessary steps afterwards
-          1. Added public `GetAngle` function to `baseapi.h` and `baseapi.cpp` for reporting page angle
-       1. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
-       1. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
-       1. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
-       2. Rewrote `tprintf` function in `src/ccutil/tprintf.cpp` to force flushing
-       3. Added new version of `SetImage` to `src/api/baseapi.cpp` and `include/tesseract/baseapi.h` that reads image from filesystem
+          1. Added public `GetGradient` function to `baseapi.h` and `baseapi.cpp` for reporting page angle
+             1. Also required minor changes to `src/ccmain/tesseractclass.h`, `src/ccmain/pagesegmain.cpp`, `src/textord/textord.cpp`, and `src/textord/textord.h`
+                1. See this commit: https://github.com/Balearica/tesseract/commit/db6951f655263878f6344380a5ddb95e678d7c09
+       2. Added `WriteImage` function to `baseapi.h` and `baseapi.cpp` for saving images (original, grey, and binary)
+       3. Added `SaveParameters` and `RestoreParameters` functions to `baseapi.h` and `baseapi.cpp` for saving and restoring parameters
+       4. Added calls to `EM_ASM_ARGS` to `src/ccmain/control.cpp` for progress logging (and added `<emscripten.h>` header)
+       5. Rewrote `tprintf` function in `src/ccutil/tprintf.cpp` to force flushing
+       6. Added new version of `SetImage` to `src/api/baseapi.cpp` and `include/tesseract/baseapi.h` that reads image from filesystem
           1. This was done to resolve memory leak--see [this issue](https://github.com/naptha/tesseract.js/issues/678)
-       4. Edited `ParamUtils::PrintParams` in `src/ccutil/params.cpp` to remove description text (resolves bug)
+       7. Edited `ParamUtils::PrintParams` in `src/ccutil/params.cpp` to remove description text (resolves bug)
           1. The bug was reported in [this](https://github.com/tesseract-ocr/tesseract/issues/3943) Git Issue, so we can cut this point if resolved in a future version of Tesseract
 
 ## Running Minimal Examples
