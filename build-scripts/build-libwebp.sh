@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+echo $(dirname $0)/var.sh
 source $(dirname $0)/var.sh
 
 LIB_PATH=third_party/libwebp
@@ -8,17 +9,16 @@ CXXFLAGS="-I$INCLUDE_DIR $OPTIM_FLAGS"
 LDFLAGS="-L$LIB_DIR"
 CM_FLAGS=(
   -DCMAKE_INSTALL_PREFIX=$BUILD_DIR
-  -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_FILE
   -DBUILD_SHARED_LIBS=OFF
-  -DZLIB_LIBRARY=$LIB_DIR
+  -DZLIB_LIBRARY=$LIB_DIR/libz.a
   -DZLIB_INCLUDE_DIR=$INCLUDE_DIR
-  -DPNG_LIBRARY=$LIB_DIR
+  -DPNG_LIBRARY=$LIB_DIR/libpng.a
   -DPNG_PNG_INCLUDE_DIR=$INCLUDE_DIR
-  -DJPEG_LIBRARY=$LIB_DIR
+  -DJPEG_LIBRARY=$LIB_DIR/libjpeg.a
   -DJPEG_INCLUDE_DIR=$INCLUDE_DIR
-  -DTIFF_LIBRARY=$LIB_DIR
+  -DTIFF_LIBRARY=$LIB_DIR/libtiff.a
   -DTIFF_INCLUDE_DIR=$INCLUDE_DIR
-  -DGIF_LIBRARY=$LIB_DIR
+  -DGIF_LIBRARY=$LIB_DIR/libgif.a
   -DGIF_INCLUDE_DIR=$INCLUDE_DIR
   -DWEBP_ENABLE_SIMD=OFF
   -DWEBP_BUILD_CWEBP=OFF
@@ -32,6 +32,11 @@ CM_FLAGS=(
   -DWEBP_BUILD_ANIM_UTILS=OFF
   -DWEBP_BUILD_EXTRAS=OFF
 )
+
+if [ $BUILD_WASM = 1 ]; then
+  export CM_FLAGS+=(-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_FILE)
+fi
+
 echo "CM_FLAGS=${CM_FLAGS[@]}"
 
 cd $LIB_PATH
@@ -41,10 +46,10 @@ then
 fi
 mkdir -p build
 cd build
-emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
+cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 if [ $BUILD_CLEAN = 1 ]
 then
-  emmake make clean
+  make clean
 fi
-emmake make install -j$PROC
+make install -j$PROC
 cd $ROOT_DIR

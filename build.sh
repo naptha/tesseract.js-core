@@ -6,25 +6,25 @@ SCRIPT_ROOT=$(dirname $0)/build-scripts
 
 # verify Emscripten version
 emcc -v
-# install dependencies
+echo "installing dependencies"
 $SCRIPT_ROOT/install-deps.sh
-# build zlib
+echo "building zlib"
 $SCRIPT_ROOT/build-zlib.sh
-# build libtiff
+echo "building libtiff"
 $SCRIPT_ROOT/build-libtiff.sh
-# build openlibm
+echo "building openlibm"
 $SCRIPT_ROOT/build-openlibm.sh
-# build giflib
+echo "building giflib"
 $SCRIPT_ROOT/build-giflib.sh
-# build libpng
+echo "building libpng"
 $SCRIPT_ROOT/build-libpng.sh
-# build libjpeg
+echo "building libjpeg"
 $SCRIPT_ROOT/build-libjpeg.sh
-# build libwebp
+echo "building libwebp"
 $SCRIPT_ROOT/build-libwebp.sh
-# build leptonica
+echo "building leptonica"
 $SCRIPT_ROOT/build-leptonica.sh
-# build tesseract
+echo "building tesseract"
 $SCRIPT_ROOT/build-tesseract.sh
 
 cp ./third_party/tesseract/build/bin/* .

@@ -10,9 +10,9 @@ CONF_FLAGS=(
 )
 
 echo "CONF_FLAGS=${CONF_FLAGS[@]}"
-(cd $LIB_PATH && autoreconf -f -i && emconfigure ./configure -C "${CONF_FLAGS[@]}")
 if [ $BUILD_CLEAN = 1 ]
 then
-  emmake make -C $LIB_PATH clean
+  make -C $LIB_PATH distclean || echo "Failed to run make -C $LIB_PATH distclean"
 fi
-emmake make -C $LIB_PATH install -j$PROC
+(cd $LIB_PATH && autoreconf -f -i && $CONFIGURE_CMD ./configure -C "${CONF_FLAGS[@]}")
+$MAKE_CMD -C $LIB_PATH install -j$PROC

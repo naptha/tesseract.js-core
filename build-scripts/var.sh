@@ -4,24 +4,38 @@
 
 set -euo pipefail
 
+## Build to .wasm
+BUILD_WASM=1
+
 # Include llvm binaries
-export PATH=$PATH:$EMSDK/upstream/bin
+if [ $BUILD_WASM = 1 ]; then
+  export PATH=$PATH:$EMSDK/upstream/bin
+fi
+
+if [ $BUILD_WASM = 1 ]; then
+  export CONFIGURE_CMD="emconfigure"
+  export MAKE_CMD="emmake make"
+  export CMAKE_CMD="emmake cmake"
+else
+  export CONFIGURE_CMD=""
+  export MAKE_CMD="make"
+  export CMAKE_CMD="cmake"
+fi
+
 
 # Build everything from scratch (rather than any incremental changes)
 # This should always be set to 1 in the Git repo, and buils should always be run with BUILD_CLEAN=1 before pushing.
 # However, it reduces compile time during development to set BUILD_CLEAN=0. 
-BUILD_CLEAN=0
+BUILD_CLEAN=1
 
 # Number of processes
 PROC=$(($(cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l)-1))
 
-# Flags for code optimization, focus on speed instead
-# of size
 OPTIM_FLAGS=(
   -O3
 )
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+if [[ "$OSTYPE" == "linux-gnu"* ]] && [ $BUILD_WASM = 1 ]; then
   # Use closure complier only in linux environment
   OPTIM_FLAGS=(
     "${OPTIM_FLAGS[@]}"
@@ -44,7 +58,9 @@ INCLUDE_DIR=$BUILD_DIR/include
 EM_PKG_CONFIG_PATH=$BUILD_DIR/lib/pkgconfig
 
 # Toolchain file path for cmake
-TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+if [ $BUILD_WASM = 1 ]; then
+  TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+fi
 
 CFLAGS="-I$BUILD_DIR/include $OPTIM_FLAGS"
 CXXFLAGS="-I$BUILD_DIR/include $OPTIM_FLAGS"

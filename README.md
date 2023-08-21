@@ -6,6 +6,16 @@ tesseract.js-core
 Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compiles original tesseract from C to JavaScript WebAssembly.
 
 
+## Compiling
+
+To build tesseract-core.js by yourself, please install [docker](https://www.docker.com/) and run:
+
+```
+$ bash build-with-docker.sh
+```
+
+The generated files will be stored in root path.  When compiling, errors sometimes occur due to race conditions (some dependencies do not appear to compile properly in parallel).  Re-running generally resolves. 
+
 ## Structure
 
 1.	Build scripts are in `build-scripts` folder
@@ -48,11 +58,3 @@ As we leverage git-submodule to manage dependencies, remember to add recursive w
 ```
 $ git clone --recursive https://github.com/naptha/tesseract.js-core
 ```
-
-To build tesseract-core.js by yourself, please install [docker](https://www.docker.com/) and run:
-
-```
-$ bash build-with-docker.sh
-```
-
-The generated files will be stored in root path.

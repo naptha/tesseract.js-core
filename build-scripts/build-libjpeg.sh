@@ -7,9 +7,13 @@ LIB_PATH=third_party/libjpeg
 CXXFLAGS="$OPTIM_FLAGS"
 CM_FLAGS=(
   -DCMAKE_INSTALL_PREFIX=$BUILD_DIR
-  -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_FILE
   -DBUILD_SHARED_LIBS=OFF
 )
+
+if [ $BUILD_WASM = 1 ]; then
+  export CM_FLAGS+=(-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_FILE)
+fi
+
 echo "CM_FLAGS=${CM_FLAGS[@]}"
 
 cd $LIB_PATH
@@ -19,10 +23,10 @@ then
 fi
 mkdir -p build
 cd build
-emmake cmake .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
+$CMAKE_CMD .. -DCMAKE_C_FLAGS="$CXXFLAGS" ${CM_FLAGS[@]}
 if [ $BUILD_CLEAN = 1 ]
 then
-  emmake make clean
+  $MAKE_CMD clean
 fi
-emmake make install -j$PROC
+$MAKE_CMD install -j$PROC
 cd $ROOT_DIR
