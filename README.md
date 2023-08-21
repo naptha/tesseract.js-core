@@ -11,7 +11,7 @@ Core part of [tesseract.js](https://github.com/naptha/tesseract.js), which compi
 To build tesseract-core.js by yourself, please install [docker](https://www.docker.com/) and run:
 
 ```
-$ bash build-with-docker.sh
+bash build-with-docker.sh
 ```
 
 The generated files will be stored in root path.  When compiling, errors sometimes occur due to race conditions (some dependencies do not appear to compile properly in parallel).  Re-running generally resolves. 
