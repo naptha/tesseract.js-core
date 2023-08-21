@@ -56,5 +56,5 @@ The "benchmark" examples behave similarly, except that they take longer to run a
 As we leverage git-submodule to manage dependencies, remember to add recursive when cloning the repository:
 
 ```
-$ git clone --recursive https://github.com/naptha/tesseract.js-core
+git clone --recursive https://github.com/naptha/tesseract.js-core
 ```
