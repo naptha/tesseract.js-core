@@ -907,9 +907,11 @@ IntPtr* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_AllWordConfidences_0(Te
   return self->AllWordConfidences();
 }
 
-bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_AdaptToWordStr_2(TessBaseAPI* self, PageSegMode mode, const char* wordstr) {
-  return self->AdaptToWordStr(mode, wordstr);
-}
+// This function does not exist in LSTM-only build so causes errors.
+// Eliminating it completely to avoid confusion.
+// bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_AdaptToWordStr_2(TessBaseAPI* self, PageSegMode mode, const char* wordstr) {
+//   return self->AdaptToWordStr(mode, wordstr);
+// }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Clear_0(TessBaseAPI* self) {
   self->Clear();
