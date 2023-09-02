@@ -48,7 +48,7 @@ The generated files will be stored in root path.  When compiling, errors sometim
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  
 
-To run the node examples, navigate to `examples/node/minimal/` and then run e.g. `node index.wasm.js`.
+To run the node examples, navigate to `examples/node/minimal/` and then run e.g. `node index.wasm.js [input_file]`.
 
 The "benchmark" examples behave similarly, except that they take longer to run and report runtime instead of recognition text.  All other examples are experimental and should not be expected to run. 
 
