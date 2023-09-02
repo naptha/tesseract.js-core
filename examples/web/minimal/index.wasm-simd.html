@@ -1,10 +1,32 @@
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <script src="../../../tesseract-core-simd.wasm.js"></script>
-    <script>
 
+<head>
+  <meta charset="UTF-8">
+  <script src="../../../tesseract-core-simd.wasm.js"></script>
+</head>
+
+<body>
+  <input type="file" id="uploader">
+  <textarea id="message"></textarea>
+
+  <script>
+
+    const readFromBlobOrFile = (blob) => (
+      new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+        fileReader.onerror = ({ target: { error: { code } } }) => {
+          reject(Error(`File could not be read! Code=${code}`));
+        };
+        fileReader.readAsArrayBuffer(blob);
+      })
+    );
+
+    const recognize = (evt) => {
       TesseractCore().then((TessModule) => {
+        let time1 = Date.now();
         const api = new TessModule.TessBaseAPI();
         const lang = 'eng';
 
@@ -12,27 +34,36 @@
           .then(resp => resp.arrayBuffer())
           .then(buf => {
             TessModule.FS.writeFile(`${lang}.traineddata`, new Uint8Array(buf));
-            return fetch('../../data/test-image.json');
           })
-          .then(resp => resp.json())
-          .then(json => {
-            const { width, height, data } = json;
+          .then(async () => {
+
             const messageDiv = document.getElementById('message');
-            const ptr = TessModule._malloc(data.length * Uint8Array.BYTES_PER_ELEMENT);
-            TessModule.HEAPU8.set(data, ptr);
 
             api.Init(null, lang);
-            api.SetImage(ptr, width, height, Uint8Array.BYTES_PER_ELEMENT, width);
-            api.SetRectangle(0, 0, width, height);
+
+            const file = evt.target.files[0];
+            const fileBuf = new Uint8Array(await readFromBlobOrFile(file));
+            TessModule.FS.writeFile("/input", fileBuf);
+            api.SetImageFile();
+
             messageDiv.innerHTML = api.GetUTF8Text();
+
+            let time2 = Date.now();
+
+            console.log("Used heap size: " + Math.round((performance.memory.usedJSHeapSize) / 1e6) + "MB");
+            console.log("Total heap size: " + Math.round((performance.memory.totalJSHeapSize) / 1e6) + "MB");
+            console.log("Total runtime: " + (time2 - time1) / 1e3 + "s");
+
             api.End();
             TessModule.destroy(api);
-            TessModule._free(ptr);
-          });
+          })
       });
-    </script>
-  </head>
-  <body>
-    <textarea id="message">Working...</textarea>
-  </body>
+    }
+
+    const elm = document.getElementById('uploader');
+    elm.addEventListener('change', recognize);
+
+  </script>
+</body>
+
 </html>
