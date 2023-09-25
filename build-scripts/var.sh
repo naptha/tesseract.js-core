@@ -7,6 +7,12 @@ set -euo pipefail
 ## Build to .wasm
 BUILD_WASM=1
 
+## Build only a single .wasm build (SIMD-enabled, LSTM + Legacy supported)
+## Since multiple builds are provided in release versions (currently 4),
+## this option saves time when enabled during development, 
+## but must be disabled for all builds to be updated before a release. 
+BUILD_SINGLE=0
+
 # Include llvm binaries
 if [ $BUILD_WASM = 1 ]; then
   export PATH=$PATH:$EMSDK/upstream/bin
