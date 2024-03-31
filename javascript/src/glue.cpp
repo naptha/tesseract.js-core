@@ -148,6 +148,10 @@ bool EMSCRIPTEN_KEEPALIVE emscripten_bind_ResultIterator_Baseline_5(ResultIterat
   return self->Baseline(level, x1, y1, x2, y2);
 }
 
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_ResultIterator_RowAttributes_3(ResultIterator* self, float *row_height, float *descenders, float *ascenders) {
+  return self->RowAttributes(row_height, descenders, ascenders);
+}
+
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_ResultIterator_Orientation_4(ResultIterator* self, Orientation* orientation, WritingDirection* writing_direction, TextlineOrder* textline_order, FloatPtr* deskew_angle) {
   self->Orientation(orientation, writing_direction, textline_order, deskew_angle);
 }

@@ -61,6 +61,13 @@ ResultIterator.prototype['getBaseline'] = function(pil){ // pi is the page itera
 	return obj;
 }
 
+ResultIterator.prototype['getRowAttributes'] = function(){ // pi is the page iterator
+	var pt = new pointerHelper();
+	this['RowAttributes'](pt['f32']('row_height'), pt['f32']('descenders'), pt['f32']('ascenders'));
+	var obj = pt.get();
+	return obj;
+}
+
 ResultIterator.prototype['getWordFontAttributes'] =  function(){
 	var pt = new pointerHelper();
 	var fontName = this['WordFontAttributes'](pt['bool']('is_bold'),

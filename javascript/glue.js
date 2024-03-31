@@ -395,6 +395,14 @@ ResultIterator.prototype['Baseline'] = ResultIterator.prototype.Baseline = /** @
   return !!(_emscripten_bind_ResultIterator_Baseline_5(self, level, x1, y1, x2, y2));
 };;
 
+ResultIterator.prototype['RowAttributes'] = ResultIterator.prototype.RowAttributes = /** @suppress {undefinedVars, duplicate} */function(row_height, descenders, ascenders) {
+  var self = this.ptr;
+  if (row_height && typeof row_height === 'object') row_height = row_height.ptr;
+  if (descenders && typeof descenders === 'object') descenders = descenders.ptr;
+  if (ascenders && typeof ascenders === 'object') ascenders = ascenders.ptr;
+  return !!(_emscripten_bind_ResultIterator_RowAttributes_3(self, row_height, descenders, ascenders));
+};;
+
 ResultIterator.prototype['Orientation'] = ResultIterator.prototype.Orientation = /** @suppress {undefinedVars, duplicate} */function(orientation, writing_direction, textline_order, deskew_angle) {
   var self = this.ptr;
   if (orientation && typeof orientation === 'object') orientation = orientation.ptr;
