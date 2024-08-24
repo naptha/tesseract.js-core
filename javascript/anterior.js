@@ -1,4 +1,4 @@
-BoolPtr.prototype['getValue'] = function(n){ return !!getValue(getPointer(this) + (n || 0) * 'i1') }
+BoolPtr.prototype['getValue'] = function(n){ return !!getValue(getPointer(this) + (n || 0), 'i8') }
 IntPtr.prototype['getValue'] = function(n){ return getValue(getPointer(this) + (n || 0) * 4, 'i32') }
 FloatPtr.prototype['getValue'] = function(n){ return getValue(getPointer(this) + (n || 0) * 4, 'float') }
 DoublePtr.prototype['getValue'] = function(n){ return getValue(getPointer(this) + (n || 0) * 8, 'double') }
