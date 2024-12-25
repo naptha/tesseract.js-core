@@ -1571,42 +1571,63 @@ TessBaseAPI.prototype['GetIterator'] = TessBaseAPI.prototype.GetIterator = /** @
 
 TessBaseAPI.prototype['GetUTF8Text'] = TessBaseAPI.prototype.GetUTF8Text = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetUTF8Text_0(self));
+  var ptr = _emscripten_bind_TessBaseAPI_GetUTF8Text_0(self);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetHOCRText'] = TessBaseAPI.prototype.GetHOCRText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetHOCRText_1(self, page_number));
+  var ptr = _emscripten_bind_TessBaseAPI_GetHOCRText_1(self, page_number);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetTSVText'] = TessBaseAPI.prototype.GetTSVText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetTSVText_1(self, page_number));
+  var ptr = _emscripten_bind_TessBaseAPI_GetTSVText_1(self, page_number);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetJSONText'] = TessBaseAPI.prototype.GetJSONText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetJSONText_1(self, page_number));
+  var ptr = _emscripten_bind_TessBaseAPI_GetJSONText_1(self, page_number);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetBoxText'] = TessBaseAPI.prototype.GetBoxText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetBoxText_1(self, page_number));
+  var ptr = _emscripten_bind_TessBaseAPI_GetBoxText_1(self, page_number);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetUNLVText'] = TessBaseAPI.prototype.GetUNLVText = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetUNLVText_0(self));
+  var ptr = _emscripten_bind_TessBaseAPI_GetUNLVText_0(self);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['GetOsdText'] = TessBaseAPI.prototype.GetOsdText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
-  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetOsdText_1(self, page_number));
+  var ptr = _emscripten_bind_TessBaseAPI_GetOsdText_1(self, page_number);
+  var result = UTF8ToString(ptr);
+  _free(ptr);
+  return result;
 };;
 
 TessBaseAPI.prototype['MeanTextConf'] = TessBaseAPI.prototype.MeanTextConf = /** @suppress {undefinedVars, duplicate} */function() {
