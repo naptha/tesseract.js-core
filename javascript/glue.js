@@ -1586,6 +1586,12 @@ TessBaseAPI.prototype['GetTSVText'] = TessBaseAPI.prototype.GetTSVText = /** @su
   return UTF8ToString(_emscripten_bind_TessBaseAPI_GetTSVText_1(self, page_number));
 };;
 
+TessBaseAPI.prototype['GetJSONText'] = TessBaseAPI.prototype.GetJSONText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
+  var self = this.ptr;
+  if (page_number && typeof page_number === 'object') page_number = page_number.ptr;
+  return UTF8ToString(_emscripten_bind_TessBaseAPI_GetJSONText_1(self, page_number));
+};;
+
 TessBaseAPI.prototype['GetBoxText'] = TessBaseAPI.prototype.GetBoxText = /** @suppress {undefinedVars, duplicate} */function(page_number) {
   var self = this.ptr;
   if (page_number && typeof page_number === 'object') page_number = page_number.ptr;

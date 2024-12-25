@@ -25,7 +25,7 @@ The generated files will be stored in root path.  When compiling, errors sometim
     1. The Tesseract repo has the following changes:
        1. Modified `CMakeLists.txt` to build with emscripten
        1. Modified `ltrresultiterator.h` and `ltrresultiterator.cpp` to add `WordChoiceIterator` class
-       1. Added `src/arch_see` folder, which is used instead of `src/arch` for the simd-enabled build
+       1. Added `src/arch_sse` folder, which is used instead of `src/arch` for the simd-enabled build
           1. This hard-codes the use of the SSE function
        1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
        1. Added functions for detecting page angle and applying rotation
@@ -44,6 +44,8 @@ The generated files will be stored in root path.  When compiling, errors sometim
        7. Edited `ParamUtils::PrintParams` in `src/ccutil/params.cpp` to remove description text (resolves bug)
           1. The bug was reported in [this](https://github.com/tesseract-ocr/tesseract/issues/3943) Git Issue, so we can cut this point if resolved in a future version of Tesseract
        8. Edited `src/ccmain/tessedit.cpp` to save error log to separate file (`/debugDev.txt`)
+       1. Added JSON as an ouput format
+          1. Added `src/api/jsonrenderer.cpp`, modified `CMakeLists.txt`, `include/tesseract/baseapi.h`, and `include/tesseract/renderer.h`
 
 ## Running Minimal Examples
 To run the browser examples, launch a web server in the root of the repo (i.e. run `http-server`).  Then navigate to the pages in `examples/web/minimal/` in your browser.  

@@ -887,6 +887,10 @@ char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetHOCRText_1(TessBaseAPI
   return self->GetHOCRText(page_number);
 }
 
+char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetJSONText_1(TessBaseAPI* self, int page_number) {
+  return self->GetJSONText(page_number);
+}
+
 char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetTSVText_1(TessBaseAPI* self, int page_number) {
   return self->GetTSVText(page_number);
 }
