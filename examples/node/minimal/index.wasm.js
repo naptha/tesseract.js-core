@@ -16,7 +16,7 @@ TesseractCore().then((TessModule) => {
   api.Init(null, lang);
 
   const fileBuf = fs.readFileSync(imagePath);
-  TessModule.FS.writeFile("/input", fileBuf);
+  TessModule.FS.writeFile('/input', fileBuf);
 
   api.SetImageFile();
 
