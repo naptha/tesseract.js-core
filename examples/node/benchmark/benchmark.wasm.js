@@ -1,7 +1,6 @@
 const fs = require('fs');
-const { readImage } = require('tesseract.js-utils');
-const TesseractCore = require('../../../tesseract-core');
 const path = require('path');
+const TesseractCore = require('../../../tesseract-core');
 
 TesseractCore().then(async (TessModule) => {
   const lang = 'eng';
@@ -12,27 +11,26 @@ TesseractCore().then(async (TessModule) => {
 
   const fileArr = [path.resolve(__dirname, '../../data/meditations.jpg'), path.resolve(__dirname, '../../data/tyger.jpg'), path.resolve(__dirname, '../../data/testocr.png')];
   let timeTotal = 0;
-  for (const file of fileArr) {
-    const image = fs.readFileSync(file);
-    const { pix } = readImage(TessModule, image);
-  
-    let time1 = Date.now();
-    for (let i=0; i<10; i++) {
-      api.SetImage(pix);
+  for (let i = 0; i < fileArr.length; i++) {
+    const file = fileArr[i];
+    const fileBuf = fs.readFileSync(file);
+    TessModule.FS.writeFile('/input', fileBuf);
+
+    api.SetImageFile();
+    const time1 = Date.now();
+    for (let j = 0; j < 10; j++) {
+      api.SetImageFile();
       const text = api.GetUTF8Text();
-      // console.log(text);
     }
-    let time2 = Date.now();
+    const time2 = Date.now();
     const timeDif = (time2 - time1) / 1e3;
     timeTotal += timeDif;
 
-    console.log(file + " [x10] runtime: " + timeDif + "s");
-    TessModule._free(pix);
+    console.log(`${file} [x10] runtime: ${timeDif}s`);
   }
 
-  console.log("Total runtime: " + timeTotal + "s");
+  console.log(`Total runtime: ${timeTotal}s`);
 
   api.End();
   TessModule.destroy(api);
-  
 });
