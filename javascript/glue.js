@@ -1333,7 +1333,7 @@ TessBaseAPI.prototype['GetStringVariable'] = TessBaseAPI.prototype.GetStringVari
 
 TessBaseAPI.prototype['Init'] = TessBaseAPI.prototype.Init = /** @suppress {undefinedVars, duplicate} */function(datapath, language, oem, configFilename) {
 
-  
+
   if (oem === undefined && configFilename !== undefined) oem = 3;
 
   var self = this.ptr;
@@ -1936,6 +1936,12 @@ Module['Pixa'] = Pixa;
     Module['PSM_COUNT'] = _emscripten_enum_PageSegMode_PSM_COUNT();
 
   }
-  if (runtimeInitialized) setupEnums();
-  else addOnInit(setupEnums);
+  if (Module['runtimeInitialized']) {
+    setupEnums();
+  } else {
+    var prev = Module['onRuntimeInitialized'];
+    Module['onRuntimeInitialized'] = prev
+      ? function () { prev.call(this); setupEnums(); }
+      : function () { setupEnums(); };
+  }
 })();
