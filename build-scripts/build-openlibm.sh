@@ -8,4 +8,4 @@ if [ $BUILD_CLEAN = 1 ]
 then
   $MAKE_CMD -C $LIB_PATH clean
 fi
-$MAKE_CMD -C $LIB_PATH prefix=$BUILD_DIR install-static -j$PROC
+$MAKE_CMD -C $LIB_PATH ARCH=wasm32 prefix=$BUILD_DIR install-static -j$PROC
