@@ -7,6 +7,10 @@ set -euo pipefail
 ## Build to .wasm
 BUILD_WASM=1
 
+## Build WASM Relaxed SIMD build
+BUILD_WASM_RELAXED_SIMD=0
+
+
 ## Build only a single .wasm build (SIMD-enabled, LSTM + Legacy supported)
 ## Since multiple builds are provided in release versions (currently 4),
 ## this option saves time when enabled during development, 
