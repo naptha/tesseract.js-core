@@ -26,7 +26,7 @@ The generated files will be stored in root path.  When compiling, errors sometim
        1. Modified `CMakeLists.txt` to build with emscripten
        1. Modified `ltrresultiterator.h` and `ltrresultiterator.cpp` to add `WordChoiceIterator` class
        1. Added `src/arch_sse` folder containing copy of `src/arch` with various changes for the SIMD builds.
-          1. Hard-coded use of the SSE function because Tesseract feature detection does not work in Webassembly.
+          1. Hard-coded use of the SSE function because Tesseract feature detection does not work in Webassembly and made various performance optimizations (in `src/arch_sse/intsimdmatrixsse.cpp`).
           1. Modified `src/arch_sse/intsimdmatrixavx2.cpp` and `src/arch_sse/simddetect.cpp` for Relaxed SIMD build.
        1. Commented out "Empty page!!" message in `src/textord/colfind.cpp` to prevent this from printing to console
        1. Added functions for detecting page angle and applying rotation
