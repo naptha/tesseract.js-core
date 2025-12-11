@@ -20,7 +20,13 @@
     "tesseract-core-simd.wasm.js",
     "tesseract-core-simd-lstm.js",
     "tesseract-core-simd-lstm.wasm",
-    "tesseract-core-simd-lstm.wasm.js"
+    "tesseract-core-simd-lstm.wasm.js",
+    "tesseract-core-relaxedsimd.js",
+    "tesseract-core-relaxedsimd.wasm",
+    "tesseract-core-relaxedsimd.wasm.js",
+    "tesseract-core-relaxedsimd-lstm.js",
+    "tesseract-core-relaxedsimd-lstm.wasm",
+    "tesseract-core-relaxedsimd-lstm.wasm.js"
   ],
   "repository": {
     "type": "git",
