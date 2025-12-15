@@ -1,6 +1,6 @@
 {
   "name": "tesseract.js-core",
-  "version": "6.0.0",
+  "version": "6.1.2",
   "description": "Tesseract C++ API in Pure Javascript",
   "main": "index.js",
   "scripts": {
